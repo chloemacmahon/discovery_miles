@@ -1,5 +1,6 @@
 package member.medical_information;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MedicalInformation {
@@ -7,6 +8,13 @@ public class MedicalInformation {
     private double weight;
     private double height;
     private List<Disease> diseases;
+
+    public MedicalInformation(int age, double weight, double height) {
+        this.age = age;
+        this.weight = weight;
+        this.height = height;
+        this.diseases = new ArrayList<>();
+    }
 
     public MedicalInformation(int age, double weight, double height, List<Disease> diseases) {
         this.age = age;

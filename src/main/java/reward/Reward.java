@@ -15,7 +15,7 @@ public abstract class Reward implements Comparable<Reward>{
         return Integer.compare(this.getMileCost(),otherReward.getMileCost());
     }
 
-    private String getItemDescription() {
+    public String getItemDescription() {
         return itemDescription;
     }
 
@@ -31,7 +31,7 @@ public abstract class Reward implements Comparable<Reward>{
         this.mileCost = mileCost;
     }
 
-    private String getRewardPartner() {
+    public String getRewardPartner() {
         return rewardPartner;
     }
 
