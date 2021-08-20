@@ -2,7 +2,6 @@ package container;
 
 import gameboard.GameBoard;
 import member.Member;
-import member.medical_information.Disease;
 import member.medical_information.MedicalInformation;
 import reward.Reward;
 import reward.SubscriptionReward;
