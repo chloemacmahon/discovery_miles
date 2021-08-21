@@ -12,7 +12,7 @@ public class GameTile {
         this.revealed = revealed;
     }
 
-    public static GameTile createTile(){
+    public static GameTile createTile() {
         Random mileGenerator = new Random();
         return new GameTile(mileGenerator.nextInt(maxMilesValue), false);
     }

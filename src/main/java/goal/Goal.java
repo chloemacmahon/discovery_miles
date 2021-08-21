@@ -1,34 +1,39 @@
 package goal;
 
-public class Goal {
-    private int totalPointsNeeded;
-    private int pointsEarned;
-    private boolean goalAccomplished ;
+import java.time.LocalDate;
 
-    public Goal(int totalPointsNeeded){
-        this.totalPointsNeeded = totalPointsNeeded;
+public class Goal {
+    private int pointsNecessary;
+    private int pointsEarned;
+    private boolean goalAccomplished;
+    private LocalDate startDate;
+
+    public Goal(int pointsNecessary) {
+        this.pointsNecessary = pointsNecessary;
         setPointsEarned(0);
         setGoalAccomplished(false);
+        setStartDate(LocalDate.now());
     }
 
-    public Goal(int totalPointsNeeded, int pointsEarned, boolean goalAccomplished) {
-        this.totalPointsNeeded = totalPointsNeeded;
+    public Goal(int pointsNecessary, int pointsEarned, boolean goalAccomplished, LocalDate startDate) {
+        this.pointsNecessary = pointsNecessary;
         this.pointsEarned = pointsEarned;
         this.goalAccomplished = goalAccomplished;
+        this.startDate = startDate;
     }
 
-    public void addPoints(int points){
-        setPointsEarned(Math.min(getTotalPoints(),getPointsEarned()+points));
+    public void addPoints(int points) {
+        setPointsEarned(Math.min(getTotalPoints(), getPointsEarned() + points));
         if (getPointsEarned() == getTotalPoints())
             setGoalAccomplished(true);
     }
 
     public int getTotalPoints() {
-        return totalPointsNeeded;
+        return pointsNecessary;
     }
 
     public void setTotalPoints(int totalPointsNeeded) {
-        this.totalPointsNeeded = totalPointsNeeded;
+        this.pointsNecessary = totalPointsNeeded;
     }
 
     public int getPointsEarned() {
@@ -45,5 +50,13 @@ public class Goal {
 
     public void setGoalAccomplished(boolean goalAccomplished) {
         this.goalAccomplished = goalAccomplished;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
 }

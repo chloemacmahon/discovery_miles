@@ -56,7 +56,7 @@ public class Member {
         try {
             subtractMiles(reward.getMileCost());
             addReward(reward);
-            System.out.println("You have purchased "+reward.getItemDescription()+" as your reward your miles are "+ getMiles());
+            System.out.println("You have purchased " + reward.getItemDescription() + " as your reward your miles are " + getMiles());
         } catch (Exception e) {
             System.out.println("Not enough points available for this award");
         }
@@ -72,9 +72,9 @@ public class Member {
         if (miles < 0) {
             System.out.println("This tile is not available to reveal");
             return false;
-        }else {
+        } else {
             addMiles(miles);
-            System.out.println("You have earned "+ miles + " miles by revealing this tile, your total miles is now "+getMiles());
+            System.out.println("You have earned " + miles + " miles by revealing this tile, your total miles is now " + getMiles());
             return true;
         }
     }
@@ -95,7 +95,7 @@ public class Member {
         return true;
     }
 
-    private String getName() {
+    public String getName() {
         return name;
     }
 
@@ -103,7 +103,7 @@ public class Member {
         this.name = name;
     }
 
-    private String getSurname() {
+    public String getSurname() {
         return surname;
     }
 
@@ -111,7 +111,7 @@ public class Member {
         this.surname = surname;
     }
 
-    private String getIdNumber() {
+    public String getIdNumber() {
         return idNumber;
     }
 
@@ -119,7 +119,7 @@ public class Member {
         this.idNumber = idNumber;
     }
 
-    private MedicalInformation getMedicalInformation() {
+    public MedicalInformation getMedicalInformation() {
         return medicalInformation;
     }
 
