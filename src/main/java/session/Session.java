@@ -32,13 +32,6 @@ public class Session {
         this.member = member;
     }
 
-    public void insertGoalsIntoDatabase(){
-        Database db = new Database();
-        db.insertGoal(this,0, "Health Goal");
-        db.insertGoal(this,1, "Driving Goal");
-        db.insertGoal(this,2, "Spending Goal");
-    }
-
     public MemberBehaviour getMemberBehaviour() {
         return memberBehaviour;
     }

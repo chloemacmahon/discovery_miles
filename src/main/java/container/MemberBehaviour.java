@@ -1,11 +1,13 @@
 package container;
 
+import Database.Database;
 import goal.DrivingGoal;
 import goal.Goal;
 import goal.HealthGoal;
 import goal.SpendingGoal;
 import member.Member;
 import reward.Reward;
+import session.Session;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +21,15 @@ public class MemberBehaviour {
     public MemberBehaviour(Member member) {
         this.member = member;
     }
+
+    /*public Session logIn(){
+        Database db = new Database();
+
+    }*/
+    /*
+    public Session createMemberSession() {
+
+    }*/
 
     public void purchaseReward() {
         Collections.sort(possibleRewards);
@@ -103,9 +114,9 @@ public class MemberBehaviour {
 
     public void createWeeklyGoals(int pointsToCollect) {
         List<Goal> goals = new ArrayList<>();
-        goals.add(new HealthGoal(pointsToCollect));
-        goals.add(new DrivingGoal(pointsToCollect));
-        goals.add(new SpendingGoal(pointsToCollect));
+        goals.add(new HealthGoal(pointsToCollect, -1));
+        goals.add(new DrivingGoal(pointsToCollect, -1));
+        goals.add(new SpendingGoal(pointsToCollect, -1));
         getMember().setGoals(goals);
     }
 

@@ -3,12 +3,12 @@ package reward;
 public class SubscriptionReward extends Reward {
     private int monthsSubscription;
 
-    public SubscriptionReward(String itemDescription, int mileCost, String rewardPartner, int monthsSubscription) {
-        super(itemDescription, mileCost, rewardPartner);
+    public SubscriptionReward(int rewardID, String itemDescription, int mileCost, String rewardPartner, int monthsSubscription) {
+        super(rewardID, itemDescription, mileCost, rewardPartner);
         this.monthsSubscription = monthsSubscription;
     }
 
-    private int getMonthsSubscription() {
+    public int getMonthsSubscription() {
         return monthsSubscription;
     }
 
