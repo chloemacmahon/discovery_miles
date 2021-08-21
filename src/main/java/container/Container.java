@@ -11,44 +11,66 @@ import session.Session;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class Container {
 
     public static void main(String[] args) {
+        Database db = new Database();
+
         MedicalInformation medicalInformation = new MedicalInformation(21, 56, 1.74);
-        Member member = new Member("Jane", "Doe", "7894561231472", medicalInformation);
-        member.chooseGameTile(3, 3);
-        member.chooseGameTile(3, 1);
-        member.chooseGameTile(6, 6);
-        member.getGameBoard().showGameBoard();
-        Reward r1 = new VoucherReward("Gift card at Woolworths food for R50", 150, "Woolworths", 50);
+        Member member = new Member("Jane", "Doe", "fjoejwd", "7894561231472");
+        Reward r1 = new VoucherReward(1,"Gift card at Woolworths food for R50", 150, "Woolworths", 50);
         member.chooseReward(r1);
-        System.out.println("member.getRewards().get(0).getMileCost() = " + member.getRewards().get(0).getItemDescription());
-        GameBoard gameBoard = new GameBoard(5, 5);
-        System.out.println("gameBoard.revealTile(2,3) = " + gameBoard.revealTile(2, 3));
-        System.out.println("gameBoard.revealTile(3,4) = " + gameBoard.revealTile(3, 4));
-        gameBoard.showGameBoard();
-        List<Reward> possibleRewards = new ArrayList<>();
-        possibleRewards.add(r1);
-        possibleRewards.add(new SubscriptionReward("Spotify 2 month subscription ", 75, "Spotify", 2));
-        possibleRewards.add(new VoucherReward("Gift card at Checkers for R250", 600, "Woolworths", 250));
-        Member member1 = new Member("James", "Mare", "121343543", medicalInformation);
+        Member member1 = new Member("James", "Mare", "Ajkdjsw", "121343543");
         MemberBehaviour mb = new MemberBehaviour(member1);
-        mb.addPossibleRewards(possibleRewards);
+        mb.addPossibleRewards(db.listAllRewardsFromDatabase());
         mb.createWeeklyGoals(150);
         mb.addPointsToDrivingGoal(160);
         //mb.addPointsToHealthGoal(260);
         mb.getMember().getGameBoard().showGameBoard();
         mb.purchaseReward();
-        Database db = new Database();
-        //Member table created
-        db.createMemberTable();
-        db.createGoalTable();
+
+
         MemberBehaviour mb1 = new MemberBehaviour(member);
         mb1.createWeeklyGoals(300);
         Session session = new Session(db.insertMember(member),member);
-        session.insertGoalsIntoDatabase();
-        System.out.println("session.getMemberID() = " + session.getMemberID());
+        /*//session.insertGoalsIntoDatabase();
+        db.insertReward(r1);
+        db.insertReward(MemberBehaviour.getPossibleRewards().get(0));
+        System.out.println("session.getMemberID() = " + session.getMemberID());*/
+        db.insertReward(createReward());
+        List<Reward> rewards = db.listAllRewardsFromDatabase();
+        for (Reward reward : rewards) {
+            System.out.println("reward.getItemDescription() = " + reward.getItemDescription());
+        }
+        System.out.println("db.validateMemberAccount(member) = " + db.validateMemberAccount(member));
+        System.out.println("db.memberIsInDatabase(member1) = " + db.memberIsInDatabase(member));
         db.closeConnection();
     }
+
+    private static Reward createReward(){
+        if (getIntInput("Enter 1 for subscription reward")==1){
+            return new SubscriptionReward(-1,getStringInput("Enter the item description"),
+                    getIntInput("Enter the mile cost"),getStringInput("Enter the reward partner"),getIntInput("How many months subcription is this reward for"));
+
+        } else {
+            return new VoucherReward(-1,getStringInput("Enter the item description"),
+                    getIntInput("Enter the mile cost"),getStringInput("Enter the reward partner"),getIntInput("What is the monetary value of this reward?"));
+        }
+    }
+
+    private static String getStringInput(String message) {
+        System.out.println(message);
+        Scanner input = new Scanner(System.in);
+        return input.nextLine();
+    }
+
+    private static int getIntInput(String message) {
+        System.out.println(message);
+        Scanner input = new Scanner(System.in);
+        return input.nextInt();
+    }
+
+
 }

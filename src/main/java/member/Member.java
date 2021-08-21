@@ -11,41 +11,45 @@ import java.util.List;
 public class Member {
     private String name;
     private String surname;
+    private String password;
     private String idNumber;
-    private MedicalInformation medicalInformation;
+    //private MedicalInformation medicalInformation;
     private int miles;
     private GameBoard gameBoard;
     private List<Goal> goals;
     private List<Reward> rewards;
 
-    public Member(String name, String surname, String idNumber, MedicalInformation medicalInformation) {
+    public Member(String name, String surname, String password, String idNumber){ //MedicalInformation medicalInformation) {
         this.name = name;
         this.surname = surname;
+        this.password = password;
         this.idNumber = idNumber;
-        this.medicalInformation = medicalInformation;
+        //this.medicalInformation = medicalInformation;
         this.miles = 0;
         this.gameBoard = new GameBoard();
         this.goals = new ArrayList<>();
         this.rewards = new ArrayList<>();
     }
 
-    public Member(String name, String surname, String idNumber, MedicalInformation medicalInformation, int miles, List<Goal> goals, List<Reward> rewards) {
+    public Member(String name, String surname, String password, String idNumber, int miles, List<Goal> goals, List<Reward> rewards) {
         this.name = name;
         this.surname = surname;
+        this.password = password;
         this.idNumber = idNumber;
-        this.medicalInformation = medicalInformation;
+        //this.medicalInformation = medicalInformation;
         this.miles = miles;
         this.gameBoard = new GameBoard();
         this.goals = goals;
         this.rewards = rewards;
     }
 
-    //Remember to refactor medical info
-    public Member(String name, String surname, String idNumber, MedicalInformation medicalInformation, int miles, GameBoard gameBoard, List<Goal> goals, List<Reward> rewards) {
+
+    public Member(String name, String surname, String password, String idNumber, int miles, GameBoard gameBoard, List<Goal> goals, List<Reward> rewards) {
         this.name = name;
         this.surname = surname;
+        this.password = password;
         this.idNumber = idNumber;
-        this.medicalInformation = medicalInformation;
+        //this.medicalInformation = medicalInformation;
         this.miles = miles;
         this.gameBoard = gameBoard;
         this.goals = goals;
@@ -91,8 +95,26 @@ public class Member {
     }
 
     private Boolean isValidID(String idNumber) {
-        //to-do
-        return true;
+        if (idNumber.length() != 13)
+            return false;
+        for (char digit : idNumber.toCharArray()) {
+            if (!Character.isDigit(digit))
+                return false;
+        }
+        return luhnVerification(idNumber);
+    }
+
+    private boolean luhnVerification(String idNumber) {
+        int addedValue = 0;
+        for (int i = 0; i < idNumber.length(); i++) {
+            if (i % 2 == 0) {
+                addedValue += idNumber.charAt(i);
+            } else {
+                int doubledValue = idNumber.charAt(i) * 2;
+                addedValue += doubledValue % 10 + Math.floorMod(doubledValue, 10);
+            }
+        }
+        return addedValue / 10 == 0;
     }
 
     public String getName() {
@@ -119,13 +141,13 @@ public class Member {
         this.idNumber = idNumber;
     }
 
-    public MedicalInformation getMedicalInformation() {
+    /*public MedicalInformation getMedicalInformation() {
         return medicalInformation;
     }
 
     private void setMedicalInformation(MedicalInformation medicalInformation) {
         this.medicalInformation = medicalInformation;
-    }
+    }*/
 
     public int getMiles() {
         return miles;
@@ -157,5 +179,13 @@ public class Member {
 
     public void setGoals(List<Goal> goals) {
         this.goals = goals;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -3,19 +3,22 @@ package goal;
 import java.time.LocalDate;
 
 public class Goal {
+    private int goalID;
     private int pointsNecessary;
     private int pointsEarned;
     private boolean goalAccomplished;
     private LocalDate startDate;
 
-    public Goal(int pointsNecessary) {
+    public Goal(int goalID, int pointsNecessary) {
+        this.goalID = goalID;
         this.pointsNecessary = pointsNecessary;
         setPointsEarned(0);
         setGoalAccomplished(false);
         setStartDate(LocalDate.now());
     }
 
-    public Goal(int pointsNecessary, int pointsEarned, boolean goalAccomplished, LocalDate startDate) {
+    public Goal(int goalID, int pointsNecessary, int pointsEarned, boolean goalAccomplished, LocalDate startDate) {
+        this.goalID = goalID;
         this.pointsNecessary = pointsNecessary;
         this.pointsEarned = pointsEarned;
         this.goalAccomplished = goalAccomplished;
@@ -58,5 +61,13 @@ public class Goal {
 
     public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
+    }
+
+    public int getGoalID() {
+        return goalID;
+    }
+
+    public void setGoalID(int goalID) {
+        this.goalID = goalID;
     }
 }
