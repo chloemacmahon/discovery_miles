@@ -1,6 +1,6 @@
 package reward;
 
-public class SubscriptionReward extends Reward{
+public class SubscriptionReward extends Reward {
     private int monthsSubscription;
 
     public SubscriptionReward(String itemDescription, int mileCost, String rewardPartner, int monthsSubscription) {

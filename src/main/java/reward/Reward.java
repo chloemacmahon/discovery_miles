@@ -1,18 +1,18 @@
 package reward;
 
-public abstract class Reward implements Comparable<Reward>{
+public abstract class Reward implements Comparable<Reward> {
     private String itemDescription;
     private int mileCost;
     private String rewardPartner;
 
-    public Reward(String itemDescription, int mileCost, String rewardPartner) {
+    protected Reward(String itemDescription, int mileCost, String rewardPartner) {
         this.itemDescription = itemDescription;
         this.mileCost = mileCost;
         this.rewardPartner = rewardPartner;
     }
 
-    public int compareTo(Reward otherReward){
-        return Integer.compare(this.getMileCost(),otherReward.getMileCost());
+    public int compareTo(Reward otherReward) {
+        return Integer.compare(this.getMileCost(), otherReward.getMileCost());
     }
 
     public String getItemDescription() {
@@ -39,4 +39,4 @@ public abstract class Reward implements Comparable<Reward>{
         this.rewardPartner = rewardPartner;
     }
 }
-    //item description, millage value, reward partner
+//item description, millage value, reward partner

@@ -1,12 +1,14 @@
 package goal;
 
-public class DrivingGoal extends Goal{
+import java.time.LocalDate;
+
+public class DrivingGoal extends Goal {
 
     public DrivingGoal(int totalPointsNeeded) {
         super(totalPointsNeeded);
     }
 
-    public DrivingGoal(int totalPointsNeeded, int pointsEarned, boolean goalAccomplished) {
-        super(totalPointsNeeded, pointsEarned, goalAccomplished);
+    public DrivingGoal(int totalPointsNeeded, int pointsEarned, boolean goalAccomplished, LocalDate startDate) {
+        super(totalPointsNeeded, pointsEarned, goalAccomplished, startDate);
     }
 }
