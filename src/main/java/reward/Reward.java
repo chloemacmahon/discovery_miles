@@ -48,5 +48,15 @@ public abstract class Reward implements Comparable<Reward> {
     public void setRewardID(int rewardID) {
         this.rewardID = rewardID;
     }
+
+    @Override
+    public String toString() {
+        return "Reward{" +
+                "rewardID=" + rewardID +
+                ", itemDescription='" + itemDescription + '\'' +
+                ", mileCost=" + mileCost +
+                ", rewardPartner='" + rewardPartner + '\'' +
+                '}';
+    }
 }
 //item description, millage value, reward partner

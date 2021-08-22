@@ -39,4 +39,13 @@ public class Session {
     public void setMemberBehaviour(MemberBehaviour memberBehaviour) {
         this.memberBehaviour = memberBehaviour;
     }
+
+    @Override
+    public String toString() {
+        return "Session{" +
+                "memberID=" + memberID +
+                ", member=" + member +
+                ", memberBehaviour=" + memberBehaviour +
+                '}';
+    }
 }

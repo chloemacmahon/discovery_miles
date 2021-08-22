@@ -70,4 +70,15 @@ public class Goal {
     public void setGoalID(int goalID) {
         this.goalID = goalID;
     }
+
+    @Override
+    public String toString() {
+        return "Goal{" +
+                "goalID=" + goalID +
+                ", pointsNecessary=" + pointsNecessary +
+                ", pointsEarned=" + pointsEarned +
+                ", goalAccomplished=" + goalAccomplished +
+                ", startDate=" + startDate +
+                '}';
+    }
 }
