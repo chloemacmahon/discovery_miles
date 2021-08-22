@@ -31,6 +31,16 @@ public class Member {
         this.rewards = new ArrayList<>();
     }
 
+    public Member(String name, String surname, String password, String idNumber, int miles) {
+        this.name = name;
+        this.surname = surname;
+        this.password = password;
+        this.idNumber = idNumber;
+        //this.medicalInformation = medicalInformation;
+        this.miles = miles;
+        this.gameBoard = new GameBoard();
+    }
+
     public Member(String name, String surname, String password, String idNumber, int miles, List<Goal> goals, List<Reward> rewards) {
         this.name = name;
         this.surname = surname;
@@ -187,5 +197,19 @@ public class Member {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", password='" + password + '\'' +
+                ", idNumber='" + idNumber + '\'' +
+                ", miles=" + miles +
+                ", gameBoard=" + gameBoard +
+                ", goals=" + goals +
+                ", rewards=" + rewards +
+                '}';
     }
 }

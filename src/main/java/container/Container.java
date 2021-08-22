@@ -17,35 +17,21 @@ public class Container {
 
     public static void main(String[] args) {
         Database db = new Database();
-
-        MedicalInformation medicalInformation = new MedicalInformation(21, 56, 1.74);
-        Member member = new Member("Jane", "Doe", "fjoejwd", "7894561231472");
-        Reward r1 = new VoucherReward(1,"Gift card at Woolworths food for R50", 150, "Woolworths", 50);
-        member.chooseReward(r1);
-        Member member1 = new Member("James", "Mare", "Ajkdjsw", "121343543");
-        MemberBehaviour mb = new MemberBehaviour(member1);
+        Member user1 = new Member("Liam","Mac Mahon","Thor","2510237503123");
+        MemberBehaviour mb = new MemberBehaviour(user1);
         mb.addPossibleRewards(db.listAllRewardsFromDatabase());
-        mb.createWeeklyGoals(150);
+        mb.createWeeklyGoals(650);
         mb.addPointsToDrivingGoal(160);
-        //mb.addPointsToHealthGoal(260);
+        mb.addPointsToHealthGoal(260);
+        mb.addPointsToHealthGoal(400);
         mb.getMember().getGameBoard().showGameBoard();
         mb.purchaseReward();
-
-
-        MemberBehaviour mb1 = new MemberBehaviour(member);
-        mb1.createWeeklyGoals(300);
-        Session session = new Session(db.insertMember(member),member);
-        /*//session.insertGoalsIntoDatabase();
-        db.insertReward(r1);
-        db.insertReward(MemberBehaviour.getPossibleRewards().get(0));
-        System.out.println("session.getMemberID() = " + session.getMemberID());*/
-        db.insertReward(createReward());
-        List<Reward> rewards = db.listAllRewardsFromDatabase();
-        for (Reward reward : rewards) {
-            System.out.println("reward.getItemDescription() = " + reward.getItemDescription());
-        }
-        System.out.println("db.validateMemberAccount(member) = " + db.validateMemberAccount(member));
-        System.out.println("db.memberIsInDatabase(member1) = " + db.memberIsInDatabase(member));
+        Session session = new Session(db.addMemberToDatabase(user1),user1);
+        System.out.println("session.toString() = " + session.toString());
+        Member member2 = db.createMemberFromDatabase(user1.getIdNumber());
+        System.out.println("member2.toString() = " + member2.toString());
+        System.out.println("member2.getRewards().get(0) = " + member2.getRewards().get(0));
+        System.out.println("member2.getGoals().get(0) = " + member2.getGoals().get(0));
         db.closeConnection();
     }
 
