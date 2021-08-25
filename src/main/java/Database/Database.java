@@ -8,7 +8,6 @@ import member.Member;
 import reward.Reward;
 import reward.SubscriptionReward;
 import reward.VoucherReward;
-import session.Session;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -53,14 +52,13 @@ public class Database {
         createGoalTable();
     }
 
-    public boolean validateMemberAccount(Member member) {
+    public boolean validateMemberAccount(String idNumber, String password) {
         try {
-            String sql = String.format("SELECT * FROM member WHERE id_number = '%s'", member.getIdNumber());
+            String sql = String.format("SELECT * FROM member WHERE id_number = '%s'", idNumber);
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(sql);
             if (result.next()) {
-                if (result.getString(5).equals(member.getPassword()))
-                    return true;
+                return result.getString(5).equals(password);
             }
             return false;
         } catch (Exception e) {
@@ -68,9 +66,9 @@ public class Database {
         }
     }
 
-    public boolean memberIsInDatabase(Member member) {
+    public boolean memberIsInDatabase(String idNumber) {
         try {
-            String sql = String.format("SELECT * FROM member WHERE id_number = '%s'", member.getIdNumber());
+            String sql = String.format("SELECT * FROM member WHERE id_number = '%s'", idNumber);
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(sql);
             return result.next();
@@ -79,6 +77,31 @@ public class Database {
         }
     }
 
+    public int findMemberIDFromDatabase(Member member) {
+        try {
+            String sql = String.format("SELECT * FROM member WHERE id_number = '%s'", member.getIdNumber());
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+            result.next();
+            return result.getInt("member_id");
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    public int findIDFromDatabase(String tableName, String whereStatement) {
+        try {
+            String sql = String.format("SELECT * FROM %s %s", tableName, whereStatement);
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+            result.next();
+            return result.getInt(1);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    //Works
     public List<Reward> listAllRewardsFromDatabase() {
         try {
             List<Reward> rewards = new ArrayList<>();
@@ -140,21 +163,23 @@ public class Database {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(sql);
             while (result.next()) {
-                Goal goal = new Goal(result.getInt("goal_id"), result.getInt("points_necessary"),
-                        result.getInt("points_earned"), result.getBoolean("goal_accomplished"),
-                        result.getDate("start_date").toLocalDate());
-                System.out.println("goal = " + goal);
                 switch (result.getString("goal_type")) {
                     case "Driving":
-                        DrivingGoal drivingGoal = (DrivingGoal) goal;
+                        DrivingGoal drivingGoal = new DrivingGoal(result.getInt("points_necessary"),
+                                result.getInt("points_earned"), result.getBoolean("goal_accomplished"),
+                                result.getDate("start_date").toLocalDate(), result.getInt("goal_id"));
                         goals.add(drivingGoal);
                         break;
                     case "Health":
-                        HealthGoal healthGoal = (HealthGoal) goal;
+                        HealthGoal healthGoal = new HealthGoal(result.getInt("points_necessary"),
+                                result.getInt("points_earned"), result.getBoolean("goal_accomplished"),
+                                result.getDate("start_date").toLocalDate(), result.getInt("goal_id"));
                         goals.add(healthGoal);
                         break;
                     case "Spending":
-                        SpendingGoal spendingGoal = (SpendingGoal) goal;
+                        SpendingGoal spendingGoal = new SpendingGoal(result.getInt("points_necessary"),
+                                result.getInt("points_earned"), result.getBoolean("goal_accomplished"),
+                                result.getDate("start_date").toLocalDate(), result.getInt("goal_id"));
                         goals.add(spendingGoal);
                         break;
                 }
@@ -174,11 +199,12 @@ public class Database {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(sql);
             while (result.next()) {
+                System.out.println("result.getInt(\"reward_id\") = " + result.getInt("reward_id"));
                 int rewardID = result.getInt("reward_id");
                 Reward rewardToAdd = possibleRewards.stream()
                         .filter(reward -> reward.getRewardID() == rewardID)
                         .findFirst()
-                        .orElse(new VoucherReward(-1,"",0,"",0));
+                        .orElse(new VoucherReward(-1, "", 0, "", 0));
                 rewards.add(rewardToAdd);
             }
             return rewards;
@@ -189,10 +215,18 @@ public class Database {
     }
 
     public int addMemberToDatabase(Member member) {
-        int memberID = insertMember(member);
-        insertRewards(member.getRewards(), memberID);
-        insertGoals(member.getGoals(), memberID);
-        return memberID;
+        if (this.memberIsInDatabase(member.getIdNumber())) {
+            int memberID = findMemberIDFromDatabase(member);
+            updateMiles(memberID, member.getMiles());
+            insertRewards(member.getRewards(), memberID);
+            insertGoals(member.getGoals(), memberID);
+            return memberID;
+        } else {
+            int memberID = insertMember(member);
+            insertRewards(member.getRewards(), memberID);
+            insertGoals(member.getGoals(), memberID);
+            return memberID;
+        }
     }
 
     //Update statements
@@ -212,10 +246,15 @@ public class Database {
     }
 
     public void updateGoal(Goal goal, int memberID) {
-        String sql = String.format("UPDATE goal SET points_necessary = %d, points_earned = %d, goal_accomplished = %b, start_date = %tD WHERE member_id = '%s' AND goal_type = '%s'" +
-                        goal.getTotalPoints(), goal.getPointsEarned(), goal.isGoalAccomplished(),
-                goal.getStartDate(), memberID, goal.getClass());
-        updateRecord(sql);
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(String.format("UPDATE goal SET " +
+                            "points_necessary = %d, points_earned = %d, goal_accomplished = %b, start_date = ? WHERE member_id = '%s' AND goal_type = '%s'"
+                    , goal.getTotalPoints(), goal.getPointsEarned(), goal.isGoalAccomplished(), memberID, goal.getGoalType()));
+            preparedStatement.setDate(1, java.sql.Date.valueOf(goal.getStartDate()));
+            insertIntoTableWithPreparedStatement(preparedStatement);
+        } catch (Exception e) {
+            System.out.println("e = " + e.getLocalizedMessage());
+        }
     }
 
     //Insert statements
@@ -255,7 +294,7 @@ public class Database {
 
     private void insertGoals(List<Goal> goals, int memberID) {
         for (Goal goal : goals) {
-            if (inDatabase("goal", String.format("WHERE member_id = '%s' AND goal_type = '%s'", memberID, goal.getClass())))
+            if (inDatabase("goal", String.format("WHERE member_id = '%s' AND goal_type = '%s'", memberID, goal.getGoalType())))
                 updateGoal(goal, memberID);
             else
                 insertGoal(goal, memberID);
@@ -263,19 +302,12 @@ public class Database {
     }
 
     private void insertGoal(Goal goal, int memberID) {
-        String goalType = "";
-        if (goal instanceof SpendingGoal)
-            goalType = "Spending";
-        else if (goal instanceof HealthGoal)
-            goalType = "Health";
-        else if (goal instanceof DrivingGoal)
-            goalType = "Driving";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(String.format("INSERT INTO goal(member_id, goal_type, points_necessary, points_earned," +
-                    " goal_accomplished, start_date ) VALUES(%d,'%s',%d,%d,%b,?)", memberID, goalType, goal.getTotalPoints(), goal.getPointsEarned(), goal.isGoalAccomplished()));
+                    " goal_accomplished, start_date ) VALUES(%d,'%s',%d,%d,%b,?)", memberID, goal.getGoalType(), goal.getTotalPoints(), goal.getPointsEarned(), goal.isGoalAccomplished()));
             preparedStatement.setDate(1, java.sql.Date.valueOf(goal.getStartDate()));
             insertIntoTableWithPreparedStatement(preparedStatement);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
         }
 
@@ -285,13 +317,20 @@ public class Database {
         if (reward.getRewardID() > 0) {
             reward.setRewardID(insertReward(reward));
         }
-        if (!inDatabase("reward_member", String.format("WHERE member_id = %d and reward_id = %d", memberID, reward.getRewardID()))) {
-            String sql = String.format("INSERT INTO reward_member(member_id, reward_id) VALUES(%d,%d)",
-                    memberID, reward.getRewardID());
+        if (!inDatabase("reward_member", String.format("WHERE reward_id = %d and member_id = %d", reward.getRewardID(), memberID))) {
+            String sql = String.format("INSERT INTO reward_member(reward_id, member_id) VALUES(%d,%d)",
+                    reward.getRewardID(), memberID);
+            insertIntoTable(sql);
+            System.out.println("sql = " + sql);
         }
     }
 
-    private int insertReward(Reward reward) {
+    public int insertReward(Reward reward) {
+        String whereStatement = String.format("WHERE reward_description = '%s' AND reward_partner = '%s' AND mile_cost = %d", reward.getItemDescription(), reward.getRewardPartner(), reward.getMileCost());
+        if (this.inDatabase("reward", whereStatement)) {
+            return findIDFromDatabase("reward", whereStatement);
+        }
+
         String rewardType;
         if (reward instanceof VoucherReward) {
             rewardType = "Voucher";
@@ -341,7 +380,8 @@ public class Database {
     private void createGoalTable() {
         if (!doesExist("goal")) {
             String tableName = "goal";
-            String fields = "goal_id serial primary key, member_id int, goal_type varchar, points_necessary int, " +
+            String fields = "goal_id serial primary key, member_id int, foreign key(member_id) references member(member_id)" +
+                    ", goal_type varchar, points_necessary int, " +
                     "points_earned int, goal_accomplished boolean, start_date date";
             createTable(tableName, fields);
             System.out.println("Goal table created");
@@ -360,7 +400,7 @@ public class Database {
     private void createSubscriptionRewardTable() {
         if (!doesExist("subscription_reward")) {
             String tableName = "subscription_reward";
-            String fields = "reward_id int, months_subscription int";
+            String fields = "reward_id int, foreign key(reward_id) references reward(reward_id), months_subscription int";
             createTable(tableName, fields);
             System.out.println("Subscription reward table created");
         }
@@ -369,7 +409,7 @@ public class Database {
     private void createVoucherRewardTable() {
         if (!doesExist("voucher_reward")) {
             String tableName = "voucher_reward";
-            String fields = "reward_id int, monetary_value double precision";
+            String fields = "reward_id int, foreign key(reward_id) references reward(reward_id), monetary_value double precision";
             createTable(tableName, fields);
             System.out.println("Voucher reward table created");
         }
@@ -378,7 +418,9 @@ public class Database {
     private void createRewardMemberTable() {
         if (!doesExist("reward_member")) {
             String tableName = "reward_member";
-            String fields = "reward_code serial primary key, reward_id int, member_id int";
+            String fields = "reward_code serial primary key, reward_id int, " +
+                    "foreign key(reward_id) references reward(reward_id), " +
+                    "member_id int, foreign key(member_id) references member(member_id)";
             createTable(tableName, fields);
             System.out.println("Reward member table created");
         }

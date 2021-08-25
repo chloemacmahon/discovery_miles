@@ -1,30 +1,34 @@
 package member;
 
 import gameboard.GameBoard;
+import goal.DrivingGoal;
 import goal.Goal;
+import goal.HealthGoal;
+import goal.SpendingGoal;
 import member.medical_information.MedicalInformation;
 import reward.Reward;
+import session.Session;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 public class Member {
     private String name;
     private String surname;
     private String password;
     private String idNumber;
-    //private MedicalInformation medicalInformation;
     private int miles;
     private GameBoard gameBoard;
     private List<Goal> goals;
     private List<Reward> rewards;
 
-    public Member(String name, String surname, String password, String idNumber){ //MedicalInformation medicalInformation) {
+    public Member(String name, String surname, String password, String idNumber) {
         this.name = name;
         this.surname = surname;
         this.password = password;
         this.idNumber = idNumber;
-        //this.medicalInformation = medicalInformation;
         this.miles = 0;
         this.gameBoard = new GameBoard();
         this.goals = new ArrayList<>();
@@ -36,7 +40,6 @@ public class Member {
         this.surname = surname;
         this.password = password;
         this.idNumber = idNumber;
-        //this.medicalInformation = medicalInformation;
         this.miles = miles;
         this.gameBoard = new GameBoard();
     }
@@ -46,7 +49,6 @@ public class Member {
         this.surname = surname;
         this.password = password;
         this.idNumber = idNumber;
-        //this.medicalInformation = medicalInformation;
         this.miles = miles;
         this.gameBoard = new GameBoard();
         this.goals = goals;
@@ -59,11 +61,66 @@ public class Member {
         this.surname = surname;
         this.password = password;
         this.idNumber = idNumber;
-        //this.medicalInformation = medicalInformation;
         this.miles = miles;
         this.gameBoard = gameBoard;
         this.goals = goals;
         this.rewards = rewards;
+    }
+
+    public void playOnGameboard() {
+        while (!this.chooseGameTile(getIntInput("What is the row number you want to reveal"), getIntInput("What is the column number you want to reveal")))
+            System.out.println("Please choose another tile as this one is not available to change");
+    }
+
+    //Allows a play on the gameboard if the goal is accomplished
+    public void addPointsToHealthGoal(int points) {
+        if (addPointsToGoal(points, 0))
+            playOnGameboard();
+    }
+
+    //Allows a play on the gameboard if the goal is accomplished
+    public void addPointsToDrivingGoal(int points) {
+        if (addPointsToGoal(points, 1))
+            playOnGameboard();
+    }
+
+    //Allows a play on the gameboard if the goal is accomplished
+    public void addPointsToSpendingGoal(int points) {
+        if (addPointsToGoal(points, 2))
+            playOnGameboard();
+    }
+
+    //0 represents health goal, 1 represents driving goal, 2 represents spending goal, returns true if goal is accomplished
+    private boolean addPointsToGoal(int points, int goalType) {
+        for (Goal goal : this.getGoals()) {
+            if (goalType == 0 && goal instanceof HealthGoal) {
+                goal.addPoints(points);
+                return goal.isGoalAccomplished();
+            }
+            if (goalType == 1 && goal instanceof DrivingGoal) {
+                goal.addPoints(points);
+                return goal.isGoalAccomplished();
+            }
+            if (goalType == 2 && goal instanceof SpendingGoal) {
+                goal.addPoints(points);
+                return goal.isGoalAccomplished();
+            }
+        }
+        return false;
+    }
+
+    public void createWeeklyGoals(int pointsToCollect) {
+        List<Goal> goals = new ArrayList<>();
+        goals.add(new HealthGoal(pointsToCollect, -1));
+        goals.add(new DrivingGoal(pointsToCollect, -1));
+        goals.add(new SpendingGoal(pointsToCollect, -1));
+        this.setGoals(goals);
+    }
+
+    private int getIntInput(String message) {
+        System.out.println(message);
+        Scanner input = new Scanner(System.in);
+        return input.nextInt();
     }
 
     public void chooseReward(Reward reward) {
@@ -104,7 +161,7 @@ public class Member {
             setMiles(getMiles() - miles);
     }
 
-    private Boolean isValidID(String idNumber) {
+    public static Boolean isValidID(String idNumber) {
         if (idNumber.length() != 13)
             return false;
         for (char digit : idNumber.toCharArray()) {
@@ -114,7 +171,7 @@ public class Member {
         return luhnVerification(idNumber);
     }
 
-    private boolean luhnVerification(String idNumber) {
+    private static boolean luhnVerification(String idNumber) {
         int addedValue = 0;
         for (int i = 0; i < idNumber.length(); i++) {
             if (i % 2 == 0) {
