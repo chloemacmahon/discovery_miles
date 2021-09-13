@@ -1,5 +1,7 @@
 package gameboard;
 
+import helper_classes.exception.InvalidGameTileException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,13 +50,13 @@ public class GameBoard {
     public int revealTile(int rowNumber, int columnNumber) {
         try {
             if (gameBoard.get(rowNumber).get(columnNumber).isRevealed())
-                throw new Exception("Tile already opened");
+                throw new InvalidGameTileException("Tile already opened");
             else {
                 setTilesRevealed(getTilesRevealed() + 1);
                 gameBoard.get(rowNumber).get(columnNumber).setRevealed(true);
                 return gameBoard.get(rowNumber).get(columnNumber).getMilesValue();
             }
-        } catch (Exception e) {
+        } catch (InvalidGameTileException invalidGameTileException) {
             return -1;
         }
     }

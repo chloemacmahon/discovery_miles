@@ -1,5 +1,7 @@
 package goal;
 
+import helper_classes.exception.InvalidGoalPointsException;
+
 import java.time.LocalDate;
 
 public class Goal {
@@ -29,9 +31,13 @@ public class Goal {
     }
 
     public void addPoints(int points) {
-        setPointsEarned(Math.min(getTotalPoints(), getPointsEarned() + points));
-        if (getPointsEarned() == getTotalPoints())
-            setGoalAccomplished(true);
+        if (goalAccomplished)
+            throw new InvalidGoalPointsException("The goal has already been accomplished and points can not be added");
+        else {
+            setPointsEarned(Math.min(getTotalPoints(), getPointsEarned() + points));
+            if (getPointsEarned() == getTotalPoints())
+                setGoalAccomplished(true);
+        }
     }
 
     public int getTotalPoints() {

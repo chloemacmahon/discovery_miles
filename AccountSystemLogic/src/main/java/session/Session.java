@@ -6,11 +6,16 @@ import reward.Reward;
 import reward.SubscriptionReward;
 import reward.VoucherReward;
 
+import helper_classes.ReceiveInputs;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Handles the session things
+ */
 public class Session {
     private int memberID;
     private Member member;
@@ -28,7 +33,7 @@ public class Session {
     }
 
     public void logInOrCreateAccount() {
-        if (getIntInput("Enter 1 to log in and 2 to create an account") == 1)
+        if (ReceiveInputs.getIntInput("Enter 1 to log in and 2 to create an account") == 1)
             logIn();
         else {
             createMember();
@@ -36,8 +41,8 @@ public class Session {
     }
 
     public void logIn() {
-        String idNumber = getStringInput("What is your ID number?");
-        String password = getStringInput("What is your password?");
+        String idNumber = ReceiveInputs.getStringInput("What is your ID number?");
+        String password = ReceiveInputs.getStringInput("What is your password?");
         if (db.validateMemberAccount(idNumber, password)) {
             setMember(db.createMemberFromDatabase(idNumber));
         } else {
@@ -47,21 +52,22 @@ public class Session {
     }
 
     public void createMember() {
-        String name = getStringInput("What is your name?");
-        String surname = getStringInput("What is your surname?");
-        String password = getStringInput("What is your password?");
-        String idNumber = getStringInput("What is your ID number?");
+        String name = ReceiveInputs.getStringInput("What is your name?");
+        String surname = ReceiveInputs.getStringInput("What is your surname?");
+        String password = ReceiveInputs.getStringInput("What is your password?");
+        String idNumber = ReceiveInputs.getStringInput("What is your ID number?");
         /*while (!Member.isValidID(idNumber))
             idNumber = getStringInput("Please enter a valid ID number");*/
         if (db.validateMemberAccount(idNumber, password)) {
             setMember(db.createMemberFromDatabase(idNumber));
             setMemberID(db.findMemberIDFromDatabase(getMember()));
         } else if (db.memberIsInDatabase(idNumber)) {
-            while (db.validateMemberAccount(idNumber, getStringInput("What is your password?"))) ;
+            while (db.validateMemberAccount(idNumber, ReceiveInputs.getStringInput("What is your password?"))) ;
             setMember(db.createMemberFromDatabase(idNumber));
             setMemberID(db.findMemberIDFromDatabase(getMember()));
         } else {
             Member member = new Member(name, surname, password, idNumber);
+            member.createWeeklyGoals(600);
             setMemberID(db.addMemberToDatabase(member));
             setMember(member);
         }
@@ -77,7 +83,7 @@ public class Session {
         if (possibleRewards.get(0).getMileCost() < getMember().getMiles()) {
             System.out.println("Please choose a reward from the following list. Choose by entering the number of the reward");
             displayAvailableRewards(getMember().getMiles());
-            int rewardPurchased = getIntInput("What reward do you want from the reward list, enter 0 or a negative value to cancel") - 1;
+            int rewardPurchased = ReceiveInputs.getIntInput("What reward do you want from the reward list, enter 0 or a negative value to cancel") - 1;
             if (rewardPurchased >= 0)
                 getMember().chooseReward(possibleRewards.get(rewardPurchased));
         } else {
@@ -107,38 +113,12 @@ public class Session {
     }
 
     public void createGoals() {
-        member.createWeeklyGoals(getIntInput("Enter the amount of points needed to accomplish this week's goals"));
+        member.createWeeklyGoals(ReceiveInputs.getIntInput("Enter the amount of points needed to accomplish this week's goals"));
     }
 
     //To add a possible reward
     private void addPossibleReward(Reward reward) {
         getPossibleRewards().add(reward);
-    }
-
-    private Reward createReward() {
-        if (getIntInput("Enter 1 for subscription reward") == 1) {
-            SubscriptionReward subscriptionReward = new SubscriptionReward(-1, getStringInput("Enter the item description"),
-                    getIntInput("Enter the mile cost"), getStringInput("Enter the reward partner"), getIntInput("How many months subcription is this reward for"));
-            db.insertReward(subscriptionReward);
-            return subscriptionReward;
-        } else {
-            VoucherReward voucherReward = new VoucherReward(-1, getStringInput("Enter the item description"),
-                    getIntInput("Enter the mile cost"), getStringInput("Enter the reward partner"), getIntInput("What is the monetary value of this reward?"));
-            db.insertReward(voucherReward);
-            return voucherReward;
-        }
-    }
-
-    private int getIntInput(String message) {
-        System.out.println(message);
-        Scanner input = new Scanner(System.in);
-        return input.nextInt();
-    }
-
-    private static String getStringInput(String message) {
-        System.out.println(message);
-        Scanner input = new Scanner(System.in);
-        return input.nextLine();
     }
 
     public int getMemberID() {
