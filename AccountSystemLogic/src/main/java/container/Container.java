@@ -18,6 +18,9 @@ public class Container {
         for (Reward reward : session.getMember().getRewards()) {
             System.out.println("reward.getItemDescription() = " + reward.getItemDescription());
         }
+
+        //If goal already accomplished add miles added it allows another play on gameboard, needs fixing
+        session.purchaseReward();
         session.updateDatabase();
     }
 
