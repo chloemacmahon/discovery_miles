@@ -13,8 +13,9 @@ public class Container {
 
     public static void main(String[] args) {
         Session session = new Session();
+        session.createGoals();
         addActivityToGoal(session);
-
+        session.getMember().getGameBoard().showGameBoard();
         for (Reward reward : session.getMember().getRewards()) {
             System.out.println("reward.getItemDescription() = " + reward.getItemDescription());
         }

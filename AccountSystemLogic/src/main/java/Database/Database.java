@@ -1,5 +1,7 @@
 package Database;
 
+import gameboard.GameBoard;
+import gameboard.GameTile;
 import goal.DrivingGoal;
 import goal.Goal;
 import goal.HealthGoal;
@@ -12,6 +14,10 @@ import reward.VoucherReward;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * Manages all the database functionality
+ */
 
 public class Database {
     private final String jdbcURL = "jdbc:postgresql://localhost:5432/DISCOVERY";
@@ -44,6 +50,7 @@ public class Database {
     }
 
     private void createAllTables() {
+        createGameTileTable();
         createMemberTable();
         createRewardTable();
         createVoucherRewardTable();
@@ -149,6 +156,7 @@ public class Database {
             }
             member.setRewards(createRewardsFromDatabase(memberID));
             member.setGoals(createGoalsFromDatabase(memberID));
+            member.setGameBoard(createGameboardFromDatabase(memberID));
             return member;
         } catch (SQLException e) {
             System.out.println(e.getLocalizedMessage());
@@ -214,17 +222,45 @@ public class Database {
         }
     }
 
+    public GameBoard createGameboardFromDatabase(int memberID) {
+        try {
+            String sql = String.format("SELECT * FROM game_tile  WHERE member_id = %d", memberID);
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery(sql);
+            List<List<GameTile>> gameBoard = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                List<GameTile> tileRow = new ArrayList<>();
+                for (int j = 0; j < 5; j++) {
+                    tileRow.add(new GameTile(0,false));
+                }
+                gameBoard.add(tileRow);
+            }
+            int tilesRevealed = 0;
+            while (result.next()) {
+                GameTile gameTile = new GameTile(result.getInt("miles_value"), result.getBoolean("revealed"));
+                if (result.getBoolean("revealed"))
+                    tilesRevealed++;
+                gameBoard.get(result.getInt("row_number")).set(result.getInt("column_number"), gameTile);
+            }
+            return new GameBoard(gameBoard, tilesRevealed);
+        } catch (SQLException e) {
+            return new GameBoard();
+        }
+    }
+
     public int addMemberToDatabase(Member member) {
         if (this.memberIsInDatabase(member.getIdNumber())) {
             int memberID = findMemberIDFromDatabase(member);
             updateMiles(memberID, member.getMiles());
             insertRewards(member.getRewards(), memberID);
             insertGoals(member.getGoals(), memberID);
+            insertGameBoard(member, memberID);
             return memberID;
         } else {
             int memberID = insertMember(member);
             insertRewards(member.getRewards(), memberID);
             insertGoals(member.getGoals(), memberID);
+            insertGameBoard(member, memberID);
             return memberID;
         }
     }
@@ -256,6 +292,18 @@ public class Database {
             System.out.println("e = " + e.getLocalizedMessage());
         }
     }
+
+    public void updateGameTile(int memberID, int rowNumber, int columnNumber, GameTile gameTile) {
+        if (inDatabase("game_tile", String.format("WHERE member_id = %d and row_number = %d and column_number = %d",
+                memberID, rowNumber, columnNumber))) {
+            String sql = String.format("UPDATE game_tile SET revealed=%b, miles_value=%d WHERE member_id=%d and row_number=%d and column_number=%d",
+                    gameTile.isRevealed(), gameTile.getMilesValue(), memberID, rowNumber, columnNumber);
+            insertIntoTable(sql);
+        } else {
+            insertGameTile(memberID, rowNumber, columnNumber, gameTile);
+        }
+    }
+
 
     //Insert statements
     private int insertIntoTable(String sql) {
@@ -353,6 +401,26 @@ public class Database {
         return reward.getRewardID();
     }
 
+    public void insertGameBoard(Member member, int memberID) {
+        List<List<GameTile>> gameBoard = member.getGameBoard().getGameBoard();
+        for (int i = 0; i < gameBoard.size(); i++) {
+            for (int j = 0; j < gameBoard.get(i).size(); j++) {
+                insertGameTile(memberID, i, j, gameBoard.get(i).get(j));
+            }
+        }
+    }
+
+    private void insertGameTile(int memberID, int rowNumber, int columnNumber, GameTile gameTile) {
+        if (!inDatabase("game_tile", String.format("WHERE member_id = %d and row_number = %d and column_number = %d",
+                memberID, rowNumber, columnNumber))) {
+            String sql = String.format("INSERT INTO game_tile(member_id, row_number, column_number, revealed, miles_value) VALUES(%d,%d,%d,%b,%d)",
+                    memberID, rowNumber, columnNumber, gameTile.isRevealed(), gameTile.getMilesValue());
+            insertIntoTable(sql);
+        } else {
+            updateGameTile(memberID, rowNumber, columnNumber,gameTile);
+        }
+    }
+
     //Table creation
     //Working
 
@@ -423,6 +491,16 @@ public class Database {
                     "member_id int, foreign key(member_id) references member(member_id)";
             createTable(tableName, fields);
             System.out.println("Reward member table created");
+        }
+    }
+
+
+    private void createGameTileTable() {
+        if (!doesExist("game_tile")) {
+            String tableName = "game_tile";
+            String fields = "tile_id serial primary key, member_id int, foreign key(member_id) references member(member_id), row_number int, column_number int, revealed boolean, miles_value int";
+            createTable(tableName, fields);
+            System.out.println("Game tile table created");
         }
     }
 
