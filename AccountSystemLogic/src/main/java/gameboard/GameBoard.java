@@ -5,12 +5,18 @@ import helper_classes.exception.InvalidGameTileException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a game board made out of <code>GameTile</code>
+ */
 public class GameBoard {
     private List<List<GameTile>> gameBoard;
     private int amountOfRows;
     private int amountOfColumns;
     private int tilesRevealed;
 
+    /**
+     * Default constructor, row and column amount is set to 5
+     */
     public GameBoard() {
         this.amountOfRows = 5;
         this.amountOfColumns = 5;
@@ -18,7 +24,12 @@ public class GameBoard {
         setTilesRevealed(0);
     }
 
-    //Creates a gameboard of a set length
+    /**
+     * Constructor that creates a board of a set length
+     * @param amountOfRows amount of rows that the game board should have
+     * @param amountOfColumns amount of columns that the game board should have
+     */
+
     public GameBoard(int amountOfRows, int amountOfColumns) {
         createGameBoard(amountOfRows, amountOfColumns);
         this.amountOfRows = amountOfRows;
@@ -26,13 +37,39 @@ public class GameBoard {
         setTilesRevealed(0);
     }
 
-    //Accepts an already made gameboard
+    /**
+     * Constructor that accepts already made game board
+     * @param gameBoard member's game board
+     * @param amountOfRows rows of game board
+     * @param amountOfColumns column of game board
+     * @param tilesRevealed the amount of tiles that have been revealed
+     */
+
     public GameBoard(List<List<GameTile>> gameBoard, int amountOfRows, int amountOfColumns, int tilesRevealed) {
         this.gameBoard = gameBoard;
         this.amountOfRows = amountOfRows;
         this.amountOfColumns = amountOfColumns;
         this.tilesRevealed = tilesRevealed;
     }
+
+    /**
+     * Constructor that accepts already made game board
+     * @param gameBoard member's game board
+     * @param tilesRevealed the amount of tiles that have been revealed
+     */
+
+    public GameBoard(List<List<GameTile>> gameBoard, int tilesRevealed) {
+        this.gameBoard = gameBoard;
+        this.amountOfRows = gameBoard.size();
+        this.amountOfColumns = gameBoard.get(0).size();
+        this.tilesRevealed = tilesRevealed;
+    }
+
+    /**
+     * Creates new game board
+     * @param amountOfRows amount of rows game board should contain
+     * @param amountOfColumns amount of columns game board should contain
+     */
 
     private void createGameBoard(int amountOfRows, int amountOfColumns) {
         List<List<GameTile>> newGameBoard = new ArrayList<>(amountOfRows);
@@ -46,7 +83,15 @@ public class GameBoard {
         setGameBoard(newGameBoard);
     }
 
-    //-1 indicates an error has occurred
+    /**
+     * Reveals a game tile
+     * If the tile chosen is not available to be revealed an exception is thrown and handled
+     * @param rowNumber row number of the tile that should be revealed
+     * @param columnNumber column number of the tile that should be revealed
+     * @return the mile value of the revealed tile
+     * @throws InvalidGameTileException is thrown if the tile can not be revealed
+     */
+
     public int revealTile(int rowNumber, int columnNumber) {
         try {
             if (gameBoard.get(rowNumber).get(columnNumber).isRevealed())
@@ -60,6 +105,10 @@ public class GameBoard {
             return -1;
         }
     }
+
+    /**
+     * Displays game board, x is displayed if the tile has not been revealed yet otherwise the mile value is displayed
+     */
 
     public void showGameBoard() {
         List<String> boardToPrint = new ArrayList<>();

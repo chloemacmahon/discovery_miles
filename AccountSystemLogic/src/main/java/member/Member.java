@@ -73,7 +73,7 @@ public class Member {
      * @param password Member account password
      * @param idNumber Members's ID number
      * @param miles The member's available miles
-     * @param gameBoard The gameboard that has been generated for the member
+     * @param gameBoard The game board that has been generated for the member
      * @param goals The member's weekly goals
      * @param rewards The rewards that the member has accumulated thus far
      */
@@ -90,7 +90,7 @@ public class Member {
     }
 
     /**
-     * This allows the user to choose a tile on the gameboard to reveal and receive the miles associated to it
+     * This allows the user to choose a tile on the game board to reveal and receive the miles associated to it
      * this method is triggered when a user completes a goal can only be used within the <code>Member</code> class
      */
     // Add exception if gametile can't be chosen
@@ -101,7 +101,7 @@ public class Member {
 
     /**
      * Adds points to the member's health goal
-     * If the goal is accomplished the member can reveal a tile on the gameboard, calls <code>playOnGameboard</code>
+     * If the goal is accomplished the member can reveal a tile on the game board, calls <code>playOnGameboard</code>
      * @param points the amount of points that the user has earn by doing an activity relating to their health, spending or driving goal
      */
 
@@ -112,7 +112,7 @@ public class Member {
 
     /**
      * Adds points to the member's driving goal
-     * If the goal is accomplished the member can reveal a tile on the gameboard, calls <code>playOnGameboard</code>
+     * If the goal is accomplished the member can reveal a tile on the game board, calls <code>playOnGameboard</code>
      * @param points the amount of points that the user has earn by doing an activity relating to their health, spending or driving goal
      */
 
@@ -123,7 +123,7 @@ public class Member {
 
     /**
      * Adds points to the member's spending goal
-     * If the goal is accomplished the member can reveal a tile on the gameboard, calls <code>playOnGameboard</code>
+     * If the goal is accomplished the member can reveal a tile on the game board, calls <code>playOnGameboard</code>
      * @param points the amount of points that the user has earn by doing an activity relating to their health, spending or driving goal
      */
 
