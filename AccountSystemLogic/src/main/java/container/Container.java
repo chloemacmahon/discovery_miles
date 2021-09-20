@@ -1,10 +1,6 @@
 package container;
 
-import Database.Database;
-import member.Member;
-import reward.Reward;
-import reward.SubscriptionReward;
-import reward.VoucherReward;
+import za.ac.nwu.ac.domain.dto.reward.Reward;
 import session.Session;
 
 import java.util.Scanner;
@@ -17,16 +13,16 @@ public class Container {
         addActivityToGoal(session);
         session.getMember().getGameBoard().showGameBoard();
         for (Reward reward : session.getMember().getRewards()) {
-            System.out.println("reward.getItemDescription() = " + reward.getItemDescription());
+            System.out.println("za.ac.nwu.ac.domain.dto.reward.getItemDescription() = " + reward.getItemDescription());
         }
 
-        //If goal already accomplished add miles added it allows another play on gameboard, needs fixing
-        session.purchaseReward();
+        //If za.ac.nwu.ac.domain.dto.goal already accomplished add miles added it allows another play on za.ac.nwu.ac.domain.dto.gameboard, needs fixing
+        //session.purchaseReward();
         session.updateDatabase();
     }
 
     private static void addActivityToGoal(Session session) {
-        switch (getIntInput("Please 1 one to add activity to health goal, 2 for spending goal, 3 for driving goal and enter any other number to cancel")) {
+        switch (getIntInput("Please 1 one to add activity to health za.ac.nwu.ac.domain.dto.goal, 2 for spending za.ac.nwu.ac.domain.dto.goal, 3 for driving za.ac.nwu.ac.domain.dto.goal and enter any other number to cancel")) {
             case 1:
                 session.getMember().addPointsToHealthGoal(getIntInput("How many points did this activity earn you?"));
                 break;

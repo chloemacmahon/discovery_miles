@@ -2,7 +2,7 @@
 ## Main goals 
 - [x] Add miles to account 
 - [ ] View miles 
-- [x] Use miles to buy reward 
+- [x] Use miles to buy za.ac.nwu.ac.domain.dto.reward 
 
 ## Sub goals 
 ### Database
