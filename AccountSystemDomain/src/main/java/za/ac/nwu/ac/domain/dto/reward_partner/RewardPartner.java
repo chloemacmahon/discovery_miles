@@ -15,19 +15,25 @@ import javax.persistence.*;
 public class RewardPartner {
 
     @Id
+    @Column (name = "reward_partner_id")
     @GeneratedValue (strategy = GenerationType.SEQUENCE)
-    @JoinColumn(referencedColumnName =  "reward.reward_partner_id",name = "reward_partner.reward_partner_id")
-    @ManyToMany
     private Long rewardPartnerId;
 
-    @Column (name = "company_name")
+    @Column (name = "company_name", unique = true)
     private String companyName;
+
+    @Column (unique = true)
+    private String email;
 
     @Column (name = "admin_password")
     private String adminPassword;
 
-    public RewardPartner(String companyName, String adminPassword) {
+    public RewardPartner() {
+    }
+
+    public RewardPartner(String companyName, String adminPassword, String email) {
         this.companyName = companyName;
+        this.email = email;
         this.adminPassword = adminPassword;
     }
 

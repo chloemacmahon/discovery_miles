@@ -12,7 +12,8 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table (name = "voucher_reward")
+//@Inheritance
+//@Table (name = "voucher_reward")
 @Component
 public class VoucherReward extends Reward {
 
@@ -23,8 +24,8 @@ public class VoucherReward extends Reward {
     @Column (name = "monetary_value")
     private double monetaryValue;
 
-    @JoinColumn (name = "reward_id")
-    private Reward reward;
+    public VoucherReward() {
+    }
 
     public VoucherReward(String itemDescription, int mileCost, RewardPartner rewardPartner, double monetaryValue) {
         super(itemDescription, mileCost, rewardPartner);

@@ -10,6 +10,7 @@ import java.util.Random;
  * Represents a game tile in the za.ac.nwu.ac.domain.dto.gameboard
  */
 @Data
+@Table (name = "game_tile")
 @Entity
 @Component
 public class GameTile {
@@ -24,15 +25,9 @@ public class GameTile {
     @Column(name = "revealed")
     private boolean revealed;
 
-    @Column(name = "row")
-    private int row;
+    private int rowNumber;
 
-    @Column(name = "column")
-    private int column;
-
-    @JoinColumn(referencedColumnName =  "za.ac.nwu.ac.domain.dto.member.member_id",name = "game_tile.member_id")
-    @ManyToMany
-    private Long memberId;
+    private int columnNumber;
 
     private static int maxMilesValue = 600;
 
@@ -44,17 +39,15 @@ public class GameTile {
      *
      * @param milesValue the miles that the tile represents
      * @param revealed   a boolean value that shows if the tile is revealed
-     * @param row row number of the tile
-     * @param column column number of the tile
-     * @param memberId id number of the za.ac.nwu.ac.domain.dto.member
+     * @param rowNumber row number of the tile
+     * @param columnNumber column number of the tile
      */
 
-    public GameTile(int milesValue, boolean revealed, int row, int column, long memberId) {
+    public GameTile(int milesValue, boolean revealed, int rowNumber, int columnNumber) {
         this.milesValue = milesValue;
         this.revealed = revealed;
-        this.row = row;
-        this.column = column;
-        this.memberId = memberId;
+        this.rowNumber = rowNumber;
+        this.columnNumber = columnNumber;
     }
 
     /**
@@ -63,9 +56,9 @@ public class GameTile {
      * @return a game tile
      */
 
-    public static GameTile createTile(int row, int column, Long memberId) {
+    public static GameTile createTile(int row, int column) {
         Random mileGenerator = new Random();
-        return new GameTile(mileGenerator.nextInt(maxMilesValue), false, row, column, memberId);
+        return new GameTile(mileGenerator.nextInt(maxMilesValue), false, row, column);
     }
 
 }

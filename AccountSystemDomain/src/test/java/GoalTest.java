@@ -1,4 +1,4 @@
-import za.ac.nwu.ac.domain.dto.helper_classes.exception.InvalidGoalPointsException;
+import za.ac.nwu.ac.domain.exception.InvalidGoalPointsException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

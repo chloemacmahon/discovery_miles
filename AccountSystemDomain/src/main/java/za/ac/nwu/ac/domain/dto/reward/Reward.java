@@ -13,6 +13,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Component
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Reward implements Comparable<Reward> {
 
     @Id
@@ -26,8 +27,8 @@ public abstract class Reward implements Comparable<Reward> {
     @Column(name = "mile_cost")
     private int mileCost;
 
-    @JoinColumn(referencedColumnName = "reward_partner.reward_partner_id",name = "reward.reward_partner_id")
-    @ManyToMany
+    @OneToOne
+    @JoinColumn(name = "reward_partner_id")
     private RewardPartner rewardPartner;
 
 

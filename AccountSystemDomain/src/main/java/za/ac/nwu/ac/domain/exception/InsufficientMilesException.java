@@ -1,4 +1,4 @@
-package za.ac.nwu.ac.domain.dto.helper_classes.exception;
+package za.ac.nwu.ac.domain.exception;
 
 public class InsufficientMilesException extends RuntimeException{
 

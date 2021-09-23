@@ -1,6 +1,6 @@
 package za.ac.nwu.ac.domain.dto.goal;
 
-import za.ac.nwu.ac.domain.dto.helper_classes.exception.InvalidGoalPointsException;
+import za.ac.nwu.ac.domain.exception.InvalidGoalPointsException;
 import lombok.Data;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ public class Goal {
     @GeneratedValue (strategy = GenerationType.SEQUENCE)
     private Long goalID;
 
-    @Column(nullable = false, length = 10)
+    @Column(name = "type",nullable = false, length = 10)
     private String goalType;
 
     @Column(name = "points_necessary")
@@ -34,8 +34,8 @@ public class Goal {
     @Column(name = "start_date")
     private LocalDate startDate;
 
-    @JoinColumn(referencedColumnName =  "za.ac.nwu.ac.domain.dto.member.member_id",name = "goal.member_id")
-    @ManyToMany
+    //@JoinColumn(referencedColumnName =  "za.ac.nwu.ac.domain.dto.member.member_id",name = "goal.member_id")
+    //@ManyToMany
     private Long memberId;
 
     public Goal(){
