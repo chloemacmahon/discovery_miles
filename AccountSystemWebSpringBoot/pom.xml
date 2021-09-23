@@ -14,6 +14,18 @@
     <artifactId>AccountSystemWebSpringBoot</artifactId>
     <packaging>war</packaging>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.session</groupId>
+                <artifactId>spring-session-bom</artifactId>
+                <version>2020.0.3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>za.ac.nwu</groupId>
@@ -26,29 +38,37 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>za.ac.nwu</groupId>
+            <artifactId>AccountSystemRepository</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
+            <version>2.5.2</version>
         </dependency>
 <!--        <dependency>-->
 <!--            <groupId>io.springfox</groupId>-->
 <!--            <artifactId>springfox-swagger2</artifactId>-->
 <!--        </dependency>-->
-
-        <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
-        </dependency>
-
+<!--        <dependency>-->
+<!--            <groupId>io.swagger</groupId>-->
+<!--            <artifactId>swagger-annotations</artifactId>-->
+<!--        </dependency>-->
 <!--        <dependency>-->
 <!--            <groupId>io.springfox</groupId>-->
 <!--            <artifactId>springfox-swagger-ui</artifactId>-->
 <!--        </dependency>-->
-
 <!--        <dependency>-->
 <!--            <groupId>io.springfox</groupId>-->
 <!--            <artifactId>springfox-bean-validators</artifactId>-->
 <!--        </dependency>-->
     </dependencies>
+
 
     <build>
         <plugins>

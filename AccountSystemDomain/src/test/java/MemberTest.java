@@ -1,27 +1,11 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import za.ac.nwu.ac.domain.dto.goal.Goal;
-import za.ac.nwu.ac.domain.dto.helper_classes.exception.InsufficientMilesException;
-import za.ac.nwu.ac.domain.dto.helper_classes.exception.InvalidGoalPointsException;
+import za.ac.nwu.ac.domain.exception.InsufficientMilesException;
 import za.ac.nwu.ac.domain.dto.member.Member;
 
 @SpringBootTest(classes = {za.ac.nwu.ac.domain.dto.member.Member.class})
 class MemberTest {
-
-    @Test
-    void verifyInvalidIDNumberTest() {
-        String idNumber = "0041300123182";
-
-        Assertions.assertFalse(Member.isValidID(idNumber));
-    }
-
-    @Test
-    void verifyValidIDNumberTest() {
-        String idNumber = "0009080131080";
-
-        Assertions.assertTrue(Member.isValidID(idNumber));
-    }
 
     @Test
     void addMilesTest() {

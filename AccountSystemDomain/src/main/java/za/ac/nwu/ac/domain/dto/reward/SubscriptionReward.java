@@ -1,6 +1,7 @@
 package za.ac.nwu.ac.domain.dto.reward;
 
 import lombok.Data;
+import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 import org.springframework.stereotype.Component;
 import za.ac.nwu.ac.domain.dto.reward_partner.RewardPartner;
 
@@ -11,8 +12,7 @@ import javax.persistence.*;
  */
 
 @Data
-@Table(name = "subscription_reward")
-@Entity
+@Entity //(name = "subscription_reward")
 @Component
 public class SubscriptionReward extends Reward {
 
@@ -23,8 +23,6 @@ public class SubscriptionReward extends Reward {
     @Column(name = "months_subscription")
     private int monthsSubscription;
 
-    @JoinColumn(name = "reward_id")
-    private Reward reward;
 
     public SubscriptionReward(){};
 

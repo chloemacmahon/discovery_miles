@@ -7,8 +7,8 @@ import za.ac.nwu.ac.domain.dto.goal.DrivingGoal;
 import za.ac.nwu.ac.domain.dto.goal.Goal;
 import za.ac.nwu.ac.domain.dto.goal.HealthGoal;
 import za.ac.nwu.ac.domain.dto.goal.SpendingGoal;
-import za.ac.nwu.ac.domain.dto.helper_classes.exception.InsufficientMilesException;
-import za.ac.nwu.ac.domain.dto.helper_classes.exception.InvalidGoalPointsException;
+import za.ac.nwu.ac.domain.exception.InsufficientMilesException;
+import za.ac.nwu.ac.domain.exception.InvalidGoalPointsException;
 import za.ac.nwu.ac.domain.dto.reward.Reward;
 
 import javax.persistence.*;
@@ -27,7 +27,7 @@ public class Member {
      */
 
     @Id
-    @GeneratedValue (strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long memberId;
 
     @Column
@@ -39,74 +39,92 @@ public class Member {
     @Column
     private String password;
 
-    @Column(name = "id_number")
+    @Column(name = "id_number", unique = true)
     private String idNumber;
+
+    @Column(unique = true)
+    private String email;
 
     @Column
     private int miles;
 
+    @OneToOne
     private GameBoard gameBoard;
+
+    @ManyToMany
     private List<Goal> goals;
+
+    @ManyToMany
     private List<Reward> rewards;
 
-    public Member(){};
+    public Member() {
+    }
 
     /**
      * Only personal details are received as parameters
-     * @param name  Member name
+     *
+     * @param name     Member name
      * @param surname  Member surname
-     * @param password  Member account password
-     * @param idNumber  Members's ID number
+     * @param password Member account password
+     * @param idNumber Members's ID number
+     * @param email    Member's email address
      */
 
-    public Member(String name, String surname, String password, String idNumber) {
-        this(name, surname, password, idNumber, 0);
+    public Member(String name, String surname, String password, String idNumber, String email) {
+        this(name, surname, password, idNumber, email, 0);
     }
 
     /**
      * Personal details and miles are received as parameters
-     * @param name  Member name
+     *
+     * @param name     Member name
      * @param surname  Member surname
-     * @param password  Member account password
-     * @param idNumber  Members's ID number
-     * @param miles  The za.ac.nwu.ac.domain.dto.member's available miles
+     * @param password Member account password
+     * @param idNumber Members's ID number
+     * @param email    Member's email address
+     * @param miles    The za.ac.nwu.ac.domain.dto.member's available miles
      */
 
-    public Member(String name, String surname, String password, String idNumber, int miles) {
-        this(name, surname, password, idNumber, 0, new ArrayList<>(), new ArrayList<>());
+    public Member(String name, String surname, String password, String idNumber, String email, int miles) {
+        this(name, surname, password, idNumber, email, miles, new ArrayList<>(), new ArrayList<>());
     }
 
     /**
      * Personal details, miles, rewards and goals are received as parameters
-     * @param name Member name
-     * @param surname Member surname
+     *
+     * @param name     Member name
+     * @param surname  Member surname
      * @param password Member account password
      * @param idNumber Members's ID number
-     * @param miles The za.ac.nwu.ac.domain.dto.member's available miles
-     * @param goals The za.ac.nwu.ac.domain.dto.member's weekly goals
-     * @param rewards The rewards that the za.ac.nwu.ac.domain.dto.member has accumulated thus far
+     * @param email    Member's email address
+     * @param miles    The za.ac.nwu.ac.domain.dto.member's available miles
+     * @param goals    The za.ac.nwu.ac.domain.dto.member's weekly goals
+     * @param rewards  The rewards that the za.ac.nwu.ac.domain.dto.member has accumulated thus far
      */
-    public Member(String name, String surname, String password, String idNumber, int miles, List<Goal> goals, List<Reward> rewards) {
-        this(name, surname, password, idNumber, 0,  new GameBoard(), goals, rewards);
+    public Member(String name, String surname, String password, String idNumber, String email, int miles, List<Goal> goals, List<Reward> rewards) {
+        this(name, surname, password, idNumber, email, 0, new GameBoard(), goals, rewards);
     }
 
     /**
      * Receives all variables
-     * @param name Member name
-     * @param surname Member surname
-     * @param password Member account password
-     * @param idNumber Members's ID number
-     * @param miles The za.ac.nwu.ac.domain.dto.member's available miles
+     *
+     * @param name      Member name
+     * @param surname   Member surname
+     * @param password  Member account password
+     * @param idNumber  Members's ID number
+     * @param email     Member's email address
+     * @param miles     The za.ac.nwu.ac.domain.dto.member's available miles
      * @param gameBoard The game board that has been generated for the za.ac.nwu.ac.domain.dto.member
-     * @param goals The za.ac.nwu.ac.domain.dto.member's weekly goals
-     * @param rewards The rewards that the za.ac.nwu.ac.domain.dto.member has accumulated thus far
+     * @param goals     The za.ac.nwu.ac.domain.dto.member's weekly goals
+     * @param rewards   The rewards that the za.ac.nwu.ac.domain.dto.member has accumulated thus far
      */
 
-    public Member(String name, String surname, String password, String idNumber, int miles, GameBoard gameBoard, List<Goal> goals, List<Reward> rewards) {
+    public Member(String name, String surname, String password, String idNumber, String email, int miles, GameBoard gameBoard, List<Goal> goals, List<Reward> rewards) {
         this.name = name;
         this.surname = surname;
         this.password = password;
         this.idNumber = idNumber;
+        this.email = email;
         this.miles = miles;
         this.gameBoard = gameBoard;
         this.goals = goals;
@@ -137,6 +155,7 @@ public class Member {
     /**
      * Adds points to the za.ac.nwu.ac.domain.dto.member's driving za.ac.nwu.ac.domain.dto.goal
      * If the za.ac.nwu.ac.domain.dto.goal is accomplished the za.ac.nwu.ac.domain.dto.member can reveal a tile on the game board, calls <code>playOnGameboard</code>
+     *
      * @param points the amount of points that the user has earn by doing an activity relating to their health, spending or driving za.ac.nwu.ac.domain.dto.goal
      */
 
@@ -148,6 +167,7 @@ public class Member {
     /**
      * Adds points to the za.ac.nwu.ac.domain.dto.member's spending za.ac.nwu.ac.domain.dto.goal
      * If the za.ac.nwu.ac.domain.dto.goal is accomplished the za.ac.nwu.ac.domain.dto.member can reveal a tile on the game board, calls <code>playOnGameboard</code>
+     *
      * @param points the amount of points that the user has earn by doing an activity relating to their health, spending or driving za.ac.nwu.ac.domain.dto.goal
      */
 
@@ -158,8 +178,9 @@ public class Member {
 
     /**
      * This method allows points to be added to a specific za.ac.nwu.ac.domain.dto.goal, can only be accessed within za.ac.nwu.ac.domain.dto.member class and
-     *  is call by <code>addPointsToHealthGoal</code>, <code>addPointsToDrivingGoal</code> and <code>addPointsToSpendingGoal</code>
-     * @param points represents the amount of points earned by completing a specific activity
+     * is call by <code>addPointsToHealthGoal</code>, <code>addPointsToDrivingGoal</code> and <code>addPointsToSpendingGoal</code>
+     *
+     * @param points   represents the amount of points earned by completing a specific activity
      * @param goalType 0 represents health za.ac.nwu.ac.domain.dto.goal, 1 represents driving za.ac.nwu.ac.domain.dto.goal, 2 represents spending za.ac.nwu.ac.domain.dto.goal
      * @return true if the points were enough to accomplish the weekly za.ac.nwu.ac.domain.dto.goal, false if not
      * Catches the exception thrown by <code>addPoints</code>
@@ -197,15 +218,16 @@ public class Member {
 
     /**
      * Creates weekly goals for the za.ac.nwu.ac.domain.dto.member with the points they need to collect to accomplish the za.ac.nwu.ac.domain.dto.goal
-     *  the start date of the za.ac.nwu.ac.domain.dto.goal will be set to the current date
+     * the start date of the za.ac.nwu.ac.domain.dto.goal will be set to the current date
+     *
      * @param pointsToCollect the points needed to accomplish all the goals
      */
 
     public void createWeeklyGoals(int pointsToCollect) {
         List<Goal> goals = new ArrayList<>();
-        goals.add(new HealthGoal(pointsToCollect,getMemberId()));
-        goals.add(new DrivingGoal(pointsToCollect,getMemberId()));
-        goals.add(new SpendingGoal(pointsToCollect,getMemberId()));
+        goals.add(new HealthGoal(pointsToCollect, getMemberId()));
+        goals.add(new DrivingGoal(pointsToCollect, getMemberId()));
+        goals.add(new SpendingGoal(pointsToCollect, getMemberId()));
         this.setGoals(goals);
     }
 
@@ -213,6 +235,7 @@ public class Member {
      * This method allows a za.ac.nwu.ac.domain.dto.member to add a za.ac.nwu.ac.domain.dto.reward to their rewards and subtracts the miles from their available miles
      * <code>subtractMiles</code>, <code>addReward</code> are called
      * If there is insufficient miles available <code>chooseReward</code> catches the exception
+     *
      * @param reward the za.ac.nwu.ac.domain.dto.reward that the za.ac.nwu.ac.domain.dto.member wants to choose as their za.ac.nwu.ac.domain.dto.reward
      */
 
@@ -229,6 +252,7 @@ public class Member {
     /**
      * Adds za.ac.nwu.ac.domain.dto.reward to the user za.ac.nwu.ac.domain.dto.reward list
      * Is called by <code>chooseReward</code>
+     *
      * @param reward the za.ac.nwu.ac.domain.dto.reward that the za.ac.nwu.ac.domain.dto.member has chosen to add to their za.ac.nwu.ac.domain.dto.reward
      */
 
@@ -239,7 +263,8 @@ public class Member {
     /**
      * Allows user to choose a tile to reveal then adds the miles to the za.ac.nwu.ac.domain.dto.member
      * Calls the <code>revealTile</code> method of the <code>GameBoard</code> class
-     * @param row the row number of the tile that the user wants to reveal
+     *
+     * @param row    the row number of the tile that the user wants to reveal
      * @param column the column number of the tile that the user wants to reveal
      * @return true if the game tile was successfully chosen
      */
@@ -258,6 +283,7 @@ public class Member {
 
     /**
      * Adds miles to the za.ac.nwu.ac.domain.dto.member's available miles
+     *
      * @param miles miles to be added to the available miles
      */
 
@@ -267,6 +293,7 @@ public class Member {
 
     /**
      * Subtract miles from the za.ac.nwu.ac.domain.dto.member's available miles
+     *
      * @param miles reduces miles if there are miles available
      * @throws InsufficientMilesException throws the exception if there is not enough miles available
      */
@@ -279,58 +306,19 @@ public class Member {
     }
 
     /**
-     * Validates the za.ac.nwu.ac.domain.dto.member's ID number
-     * @param idNumber the za.ac.nwu.ac.domain.dto.member's ID number
-     * @return true if the za.ac.nwu.ac.domain.dto.member's ID number is valid
-     */
-
-    public static Boolean isValidID(String idNumber) {
-        if (idNumber.length() != 13)
-            return false;
-        for (char digit : idNumber.toCharArray()) {
-            if (!Character.isDigit(digit))
-                return false;
-        }
-        char[] idNumberArray = idNumber.toCharArray();
-        if ((Character.getNumericValue(idNumberArray[2])+Character.getNumericValue(idNumberArray[3])*10)>12)
-            return false;
-        if ((Character.getNumericValue(idNumberArray[4])+Character.getNumericValue(idNumberArray[5])*10)>31)
-            return false;
-        return true;//luhnVerification(idNumber);
-    }
-
-    /**
-     * Verifies the za.ac.nwu.ac.domain.dto.member's ID number with the luhn algorithm
-     * @param idNumber the za.ac.nwu.ac.domain.dto.member's ID number
-     * @return true if the za.ac.nwu.ac.domain.dto.member's ID number is correct according to the luhn algorithm
-     */
-
-    private static boolean luhnVerification(String idNumber) {
-        int addedValue = 0;
-        for (int i = 0; i < idNumber.length()-1; i++) {
-            if (i % 2 == 0) {
-                addedValue += idNumber.charAt(i);
-            } else {
-                int doubledValue = idNumber.charAt(i) * 2;
-                addedValue += doubledValue % 10 + Math.floorMod(doubledValue, 10);
-            }
-        }
-        System.out.println("" +addedValue / 10);
-        return addedValue / 10 == 0;
-    }
-
-    /**
      * To string method
+     *
      * @return the string representation of the za.ac.nwu.ac.domain.dto.member details
      */
-
     @Override
     public String toString() {
         return "Member{" +
-                "name='" + name + '\'' +
+                "memberId=" + memberId +
+                ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", password='" + password + '\'' +
                 ", idNumber='" + idNumber + '\'' +
+                ", email='" + email + '\'' +
                 ", miles=" + miles +
                 ", gameBoard=" + gameBoard +
                 ", goals=" + goals +
