@@ -28,56 +28,6 @@
 //        this.memberID = memberID;
 //        this.member = member;
 //        //setPossibleRewards(db.listAllRewardsFromDatabase());
-//    }
-//
-//    public void logInOrCreateAccount() {
-//        if (ReceiveInputs.getIntInput("Enter 1 to log in and 2 to create an account") == 1)
-//            logIn();
-//        else {
-//            createMember();
-//        }
-//    }
-//
-//    public void logIn() {
-//        String idNumber = ReceiveInputs.getStringInput("What is your ID number?");
-//        String password = ReceiveInputs.getStringInput("What is your password?");
-//        if (db.validateMemberAccount(idNumber, password)) {
-//            //setMember(db.createMemberFromDatabase(idNumber));
-//            if (ChronoUnit.DAYS.between( LocalDate.now(), getMember().getGoals().get(0).getStartDate()) > 7){
-//                createGoals();
-//            }
-//        } else {
-//            createMember();
-//        }
-//        setMemberID(db.findMemberIDFromDatabase(getMember()));
-//    }
-//
-//    public void createMember() {
-//        String name = ReceiveInputs.getStringInput("What is your name?");
-//        String surname = ReceiveInputs.getStringInput("What is your surname?");
-//        String password = ReceiveInputs.getStringInput("What is your password?");
-//        String idNumber = ReceiveInputs.getStringInput("What is your ID number?");
-//        /*while (!Member.isValidID(idNumber))
-//            idNumber = getStringInput("Please enter a valid ID number");*/
-////        if (db.validateMemberAccount(idNumber, password)) {
-////            setMember(db.createMemberFromDatabase(idNumber));
-////            setMemberID(db.findMemberIDFromDatabase(getMember()));
-////        } else if (db.memberIsInDatabase(idNumber)) {
-////            while (db.validateMemberAccount(idNumber, ReceiveInputs.getStringInput("What is your password?"))) ;
-////            setMember(db.createMemberFromDatabase(idNumber));
-////            setMemberID(db.findMemberIDFromDatabase(getMember()));
-////        } else {
-////            Member member = new Member(name, surname, password, idNumber);
-////            member.createWeeklyGoals(600);
-////            setMemberID(db.addMemberToDatabase(member));
-////            setMember(member);
-////        }
-//    }
-//
-//    public void updateDatabase() {
-//        Database db = new Database();
-//        //db.addMemberToDatabase(getMember());
-//    }
 //
 ////    public void purchaseReward() {
 ////        Collections.sort(possibleRewards);

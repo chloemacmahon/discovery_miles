@@ -15,7 +15,7 @@ public class Admin {
     @GeneratedValue (strategy = GenerationType.SEQUENCE)
     private Long adminId;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     private String password;

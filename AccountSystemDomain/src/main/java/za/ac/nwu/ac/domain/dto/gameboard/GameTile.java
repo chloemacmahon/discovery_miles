@@ -15,6 +15,7 @@ import java.util.Random;
 @Component
 public class GameTile {
 
+    //Composite Key constraint
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long gameTileID;

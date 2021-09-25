@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-public class FieldValidation {
+public class Validator {
 
     /**
      * Validates the za.ac.nwu.ac.domain.dto.member's ID number
@@ -28,9 +28,7 @@ public class FieldValidation {
         if (((Character.getNumericValue(idNumberArray[2]) * 10) + Character.getNumericValue(idNumberArray[3])) > 12)
             return false;
 
-        if (((Character.getNumericValue(idNumberArray[4]) * 10) + Character.getNumericValue(idNumberArray[5])) > 31)
-            return false;
-        return true;
+        return ((Character.getNumericValue(idNumberArray[4]) * 10) + Character.getNumericValue(idNumberArray[5])) <= 31;
     }
 
 //    /**
@@ -94,15 +92,10 @@ public class FieldValidation {
      */
     public static boolean isValidEmail(String email) {
         String[] emailParts = email.split("@");
-        System.out.println("Testing");
-        if (emailParts.length > 2) {
-            String[] domainParts = emailParts[1].split(".");
-            System.out.println("is no dot");
+        if (emailParts.length == 2) {
+            String[] domainParts = emailParts[1].split("[.]");
             return domainParts.length >= 2;
         } else
-            System.out.println("@ is wrong");
             return false;
     }
-
-
 }

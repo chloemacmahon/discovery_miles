@@ -14,7 +14,9 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Component
-public class Goal {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name= "goal_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class Goal {
     @Id
     @GeneratedValue (strategy = GenerationType.SEQUENCE)
     private Long goalID;
@@ -34,10 +36,6 @@ public class Goal {
     @Column(name = "start_date")
     private LocalDate startDate;
 
-    //@JoinColumn(referencedColumnName =  "za.ac.nwu.ac.domain.dto.member.member_id",name = "goal.member_id")
-    //@ManyToMany
-    private Long memberId;
-
     public Goal(){
 
     }
@@ -48,10 +46,9 @@ public class Goal {
      * @param pointsNecessary the total amount of points that is necessary to accomplish the za.ac.nwu.ac.domain.dto.goal
      */
 
-    public Goal(String goalType, int pointsNecessary, Long memberId) {
+    public Goal(String goalType, int pointsNecessary) {
         this.goalType = goalType;
         this.pointsNecessary = pointsNecessary;
-        this.memberId = memberId;
         setPointsEarned(0);
         setGoalAccomplished(false);
         setStartDate(LocalDate.now());
@@ -66,13 +63,12 @@ public class Goal {
      * @param startDate the date at which the za.ac.nwu.ac.domain.dto.member has started working towards their za.ac.nwu.ac.domain.dto.goal
      */
 
-    public Goal(String goalType, int pointsNecessary, int pointsEarned, boolean goalAccomplished, LocalDate startDate, Long memberId) {
+    public Goal(String goalType, int pointsNecessary, int pointsEarned, boolean goalAccomplished, LocalDate startDate) {
         this.goalType = goalType;
         this.pointsNecessary = pointsNecessary;
         this.pointsEarned = pointsEarned;
         this.goalAccomplished = goalAccomplished;
         this.startDate = startDate;
-        this.memberId = memberId;
     }
 
     /**
