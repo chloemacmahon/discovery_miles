@@ -11,14 +11,28 @@ class MemberTest {
     void addMilesTest() {
         Member member = new Member();
         member.addMiles(300);
-        Assertions.assertEquals(300,member.getMiles());
+        Assertions.assertEquals(300, member.getMiles());
     }
 
     @Test
-    void createGoalsTest() {
-        Member member =  new Member();
+    void createHealthGoalTest() {
+        Member member = new Member();
         member.createWeeklyGoals(600);
-        Assertions.assertEquals(3,member.getGoals().size());
+        Assertions.assertNotNull(member.getHealthGoal());
+    }
+
+    @Test
+    void createDrivingGoalTest() {
+        Member member = new Member();
+        member.createWeeklyGoals(600);
+        Assertions.assertNotNull(member.getDrivingGoal());
+    }
+
+    @Test
+    void createSpendingGoalTest() {
+        Member member = new Member();
+        member.createWeeklyGoals(600);
+        Assertions.assertNotNull(member.getSpendingGoal());
     }
 
     @Test
@@ -26,7 +40,7 @@ class MemberTest {
         Member member = new Member();
         member.addMiles(400);
         member.subtractMiles(300);
-        Assertions.assertEquals(100,member.getMiles());
+        Assertions.assertEquals(100, member.getMiles());
     }
 
     @Test
@@ -38,5 +52,11 @@ class MemberTest {
         });
         Assertions.assertTrue(exception.getMessage().contains("Not enough miles available"));
     }
+
+    /*@Test
+    void revealTileTest() {
+        Member member = new Member("","","","","");
+
+    }*/
 
 }

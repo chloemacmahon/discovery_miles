@@ -1,17 +1,20 @@
 package za.ac.nwu.ac.domain.dto.member;
 
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.stereotype.Component;
 import za.ac.nwu.ac.domain.dto.gameboard.GameBoard;
 import za.ac.nwu.ac.domain.dto.goal.DrivingGoal;
 import za.ac.nwu.ac.domain.dto.goal.Goal;
 import za.ac.nwu.ac.domain.dto.goal.HealthGoal;
 import za.ac.nwu.ac.domain.dto.goal.SpendingGoal;
+import za.ac.nwu.ac.domain.dto.reward.Reward;
 import za.ac.nwu.ac.domain.exception.InsufficientMilesException;
 import za.ac.nwu.ac.domain.exception.InvalidGoalPointsException;
-import za.ac.nwu.ac.domain.dto.reward.Reward;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +25,7 @@ import static za.ac.nwu.ac.domain.dto.helper_classes.ReceiveInputs.getIntInput;
 @Entity
 @Component
 public class Member {
+    private static int totalPointsNecessary = 600;
     /**
      * This class represents a discovery vitality za.ac.nwu.ac.domain.dto.member
      */
@@ -29,32 +33,28 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long memberId;
-
     @Column
     private String name;
-
     @Column
     private String surname;
-
     @Column
     private String password;
-
-    @Column(name = "id_number", unique = true)
+    @Column(name = "id_number", unique = true, nullable = false)
     private String idNumber;
-
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
-
     @Column
     private int miles;
-
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private GameBoard gameBoard;
-
-    @ManyToMany
-    private List<Goal> goals;
-
-    @ManyToMany
+    @OneToOne(cascade = {CascadeType.ALL})
+    private HealthGoal healthGoal;
+    @OneToOne(cascade = {CascadeType.ALL})
+    private DrivingGoal drivingGoal;
+    @OneToOne(cascade = {CascadeType.ALL})
+    private SpendingGoal spendingGoal;
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<Reward> rewards;
 
     public Member() {
@@ -87,6 +87,7 @@ public class Member {
 
     public Member(String name, String surname, String password, String idNumber, String email, int miles) {
         this(name, surname, password, idNumber, email, miles, new ArrayList<>(), new ArrayList<>());
+        setGoalsFromList(createDefaultWeeklyGoals());
     }
 
     /**
@@ -102,7 +103,7 @@ public class Member {
      * @param rewards  The rewards that the za.ac.nwu.ac.domain.dto.member has accumulated thus far
      */
     public Member(String name, String surname, String password, String idNumber, String email, int miles, List<Goal> goals, List<Reward> rewards) {
-        this(name, surname, password, idNumber, email, 0, new GameBoard(), goals, rewards);
+        this(name, surname, password, idNumber, email, miles, new GameBoard(), goals, rewards);
     }
 
     /**
@@ -127,158 +128,8 @@ public class Member {
         this.email = email;
         this.miles = miles;
         this.gameBoard = gameBoard;
-        this.goals = goals;
+        setGoalsFromList(goals);
         this.rewards = rewards;
-    }
-
-    /**
-     * This allows the user to choose a tile on the game board to reveal and receive the miles associated to it
-     * this method is triggered when a user completes a za.ac.nwu.ac.domain.dto.goal can only be used within the <code>Member</code> class
-     */
-    // Add exception if gametile can't be chosen
-    private void playOnGameboard() {
-        while (!this.chooseGameTile(getIntInput("What is the row number you want to reveal"), getIntInput("What is the column number you want to reveal")))
-            System.out.println("Please choose another tile as this one is not available to change");
-    }
-
-    /**
-     * Adds points to the za.ac.nwu.ac.domain.dto.member's health za.ac.nwu.ac.domain.dto.goal
-     * If the za.ac.nwu.ac.domain.dto.goal is accomplished the za.ac.nwu.ac.domain.dto.member can reveal a tile on the game board, calls <code>playOnGameboard</code>
-     * @param points the amount of points that the user has earn by doing an activity relating to their health, spending or driving za.ac.nwu.ac.domain.dto.goal
-     */
-
-    public void addPointsToHealthGoal(int points) {
-        if (addPointsToGoal(points, 0))
-            playOnGameboard();
-    }
-
-    /**
-     * Adds points to the za.ac.nwu.ac.domain.dto.member's driving za.ac.nwu.ac.domain.dto.goal
-     * If the za.ac.nwu.ac.domain.dto.goal is accomplished the za.ac.nwu.ac.domain.dto.member can reveal a tile on the game board, calls <code>playOnGameboard</code>
-     *
-     * @param points the amount of points that the user has earn by doing an activity relating to their health, spending or driving za.ac.nwu.ac.domain.dto.goal
-     */
-
-    public void addPointsToDrivingGoal(int points) {
-        if (addPointsToGoal(points, 1))
-            playOnGameboard();
-    }
-
-    /**
-     * Adds points to the za.ac.nwu.ac.domain.dto.member's spending za.ac.nwu.ac.domain.dto.goal
-     * If the za.ac.nwu.ac.domain.dto.goal is accomplished the za.ac.nwu.ac.domain.dto.member can reveal a tile on the game board, calls <code>playOnGameboard</code>
-     *
-     * @param points the amount of points that the user has earn by doing an activity relating to their health, spending or driving za.ac.nwu.ac.domain.dto.goal
-     */
-
-    public void addPointsToSpendingGoal(int points) {
-        if (addPointsToGoal(points, 2))
-            playOnGameboard();
-    }
-
-    /**
-     * This method allows points to be added to a specific za.ac.nwu.ac.domain.dto.goal, can only be accessed within za.ac.nwu.ac.domain.dto.member class and
-     * is call by <code>addPointsToHealthGoal</code>, <code>addPointsToDrivingGoal</code> and <code>addPointsToSpendingGoal</code>
-     *
-     * @param points   represents the amount of points earned by completing a specific activity
-     * @param goalType 0 represents health za.ac.nwu.ac.domain.dto.goal, 1 represents driving za.ac.nwu.ac.domain.dto.goal, 2 represents spending za.ac.nwu.ac.domain.dto.goal
-     * @return true if the points were enough to accomplish the weekly za.ac.nwu.ac.domain.dto.goal, false if not
-     * Catches the exception thrown by <code>addPoints</code>
-     */
-
-    private boolean addPointsToGoal(int points, int goalType) {
-        for (Goal goal : this.getGoals()) {
-            if (goalType == 0 && goal instanceof HealthGoal) {
-                try {
-                    goal.addPoints(points);
-                    return goal.isGoalAccomplished();
-                } catch (InvalidGoalPointsException invalidGoalPointsException) {
-                    return false;
-                }
-            }
-            if (goalType == 1 && goal instanceof DrivingGoal) {
-                try {
-                    goal.addPoints(points);
-                    return goal.isGoalAccomplished();
-                } catch (InvalidGoalPointsException invalidGoalPointsException) {
-                    return false;
-                }
-            }
-            if (goalType == 2 && goal instanceof SpendingGoal) {
-                try {
-                    goal.addPoints(points);
-                    return goal.isGoalAccomplished();
-                } catch (InvalidGoalPointsException invalidGoalPointsException) {
-                    return false;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Creates weekly goals for the za.ac.nwu.ac.domain.dto.member with the points they need to collect to accomplish the za.ac.nwu.ac.domain.dto.goal
-     * the start date of the za.ac.nwu.ac.domain.dto.goal will be set to the current date
-     *
-     * @param pointsToCollect the points needed to accomplish all the goals
-     */
-
-    public void createWeeklyGoals(int pointsToCollect) {
-        List<Goal> goals = new ArrayList<>();
-        goals.add(new HealthGoal(pointsToCollect, getMemberId()));
-        goals.add(new DrivingGoal(pointsToCollect, getMemberId()));
-        goals.add(new SpendingGoal(pointsToCollect, getMemberId()));
-        this.setGoals(goals);
-    }
-
-    /**
-     * This method allows a za.ac.nwu.ac.domain.dto.member to add a za.ac.nwu.ac.domain.dto.reward to their rewards and subtracts the miles from their available miles
-     * <code>subtractMiles</code>, <code>addReward</code> are called
-     * If there is insufficient miles available <code>chooseReward</code> catches the exception
-     *
-     * @param reward the za.ac.nwu.ac.domain.dto.reward that the za.ac.nwu.ac.domain.dto.member wants to choose as their za.ac.nwu.ac.domain.dto.reward
-     */
-
-    public void chooseReward(Reward reward) {
-        try {
-            subtractMiles(reward.getMileCost());
-            addReward(reward);
-            System.out.println("You have purchased " + reward.getItemDescription() + " as your za.ac.nwu.ac.domain.dto.reward your miles are " + getMiles());
-        } catch (Exception e) {
-            System.out.println("Not enough points available for this award");
-        }
-    }
-
-    /**
-     * Adds za.ac.nwu.ac.domain.dto.reward to the user za.ac.nwu.ac.domain.dto.reward list
-     * Is called by <code>chooseReward</code>
-     *
-     * @param reward the za.ac.nwu.ac.domain.dto.reward that the za.ac.nwu.ac.domain.dto.member has chosen to add to their za.ac.nwu.ac.domain.dto.reward
-     */
-
-    private void addReward(Reward reward) {
-        getRewards().add(reward);
-    }
-
-    /**
-     * Allows user to choose a tile to reveal then adds the miles to the za.ac.nwu.ac.domain.dto.member
-     * Calls the <code>revealTile</code> method of the <code>GameBoard</code> class
-     *
-     * @param row    the row number of the tile that the user wants to reveal
-     * @param column the column number of the tile that the user wants to reveal
-     * @return true if the game tile was successfully chosen
-     */
-
-    public boolean chooseGameTile(int row, int column) {
-        int miles = getGameBoard().revealTile(row, column);
-        if (miles < 0) {
-            System.out.println("This tile is not available to reveal");
-            return false;
-        } else {
-            addMiles(miles);
-            System.out.println("You have earned " + miles + " miles by revealing this tile, your total miles is now " + getMiles());
-            return true;
-        }
     }
 
     /**
@@ -306,6 +157,104 @@ public class Member {
     }
 
     /**
+     * Adds za.ac.nwu.ac.domain.dto.reward to the user za.ac.nwu.ac.domain.dto.reward list
+     * Is called by <code>chooseReward</code>
+     *
+     * @param reward the za.ac.nwu.ac.domain.dto.reward that the za.ac.nwu.ac.domain.dto.member has chosen to add to their za.ac.nwu.ac.domain.dto.reward
+     */
+
+    public void addReward(Reward reward) {
+        getRewards().add(reward);
+    }
+
+    /**
+     * Creates weekly goals for the za.ac.nwu.ac.domain.dto.member with the points they need to collect to accomplish the za.ac.nwu.ac.domain.dto.goal
+     * the start date of the za.ac.nwu.ac.domain.dto.goal will be set to the current date
+     * Uses the static point necessary to complete goal amount
+     */
+
+    private List<Goal> createDefaultWeeklyGoals() {
+        List<Goal> goals = new ArrayList<>();
+        goals.add(new HealthGoal(totalPointsNecessary));
+        goals.add(new DrivingGoal(totalPointsNecessary));
+        goals.add(new SpendingGoal(totalPointsNecessary));
+        return goals;
+    }
+
+    /**
+     * Creates weekly goals for the za.ac.nwu.ac.domain.dto.member with the points they need to collect to accomplish the za.ac.nwu.ac.domain.dto.goal
+     * the start date of the za.ac.nwu.ac.domain.dto.goal will be set to the current date
+     *
+     * @param pointsToCollect the points needed to accomplish all the goals
+     */
+
+    public void createWeeklyGoals(int pointsToCollect) {
+        createHealthGoal(pointsToCollect);
+        createDrivingGoal(pointsToCollect);
+        createSpendingGoal(pointsToCollect);
+    }
+
+    /**
+     * Creates health goal based on the points that should be collected
+     *
+     * @param pointsToCollect number of points necessary to complete goal
+     */
+
+    public void createHealthGoal(int pointsToCollect) {
+        setHealthGoal(new HealthGoal(pointsToCollect));
+    }
+
+    /**
+     * Creates driving goal based on the points that should be collected
+     *
+     * @param pointsToCollect number of points necessary to complete goal
+     */
+
+    public void createDrivingGoal(int pointsToCollect) {
+        setDrivingGoal(new DrivingGoal(pointsToCollect));
+    }
+
+    /**
+     * Creates driving goal based on the points that should be collected
+     *
+     * @param pointsToCollect number of points necessary to complete goal
+     */
+
+    public void createSpendingGoal(int pointsToCollect) {
+        setSpendingGoal(new SpendingGoal(pointsToCollect));
+    }
+
+    /**
+     * Resets goals to their initial state
+     */
+
+    public void resetGoals(){
+        Goal[] goals = {getHealthGoal(),getSpendingGoal(),getDrivingGoal()};
+        for (Goal goal: goals) {
+            goal.setGoalAccomplished(false);
+            goal.setPointsEarned(0);
+            goal.setStartDate(LocalDate.now());
+        }
+    }
+
+    /**
+     * Translates a list of goals to individual types of goals and sets it accordingly
+     *
+     * @param goals List of goals
+     */
+    private void setGoalsFromList(List<Goal> goals) {
+        for (Goal goal : goals) {
+            if (goal instanceof HealthGoal)
+                setHealthGoal((HealthGoal) goal);
+            if (goal instanceof DrivingGoal)
+                setDrivingGoal((DrivingGoal) goal);
+            if (goal instanceof SpendingGoal)
+                setSpendingGoal((SpendingGoal) goal);
+        }
+    }
+
+
+    /**
      * To string method
      *
      * @return the string representation of the za.ac.nwu.ac.domain.dto.member details
@@ -321,7 +270,9 @@ public class Member {
                 ", email='" + email + '\'' +
                 ", miles=" + miles +
                 ", gameBoard=" + gameBoard +
-                ", goals=" + goals +
+                ", healthGoal=" + healthGoal +
+                ", drivingGoal=" + drivingGoal +
+                ", spendingGoal=" + spendingGoal +
                 ", rewards=" + rewards +
                 '}';
     }

@@ -21,8 +21,10 @@ public class GameBoard {
     @Column(name = "game_board_id")
     private Long gameBoardId;
 
-    @ElementCollection
+    @OneToMany (cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<GameTile> gameBoard;
+
+    //List<List<GameTile>>
 
     private int amountOfRows;
 
@@ -34,10 +36,10 @@ public class GameBoard {
      * Default constructor, row and column amount is set to 5
      */
     public GameBoard() {
-//        this.amountOfRows = 5;
-//        this.amountOfColumns = 5;
-//        createGameBoard(amountOfRows, amountOfColumns);
-//        setTilesRevealed(0);
+        this.amountOfRows = 5;
+        this.amountOfColumns = 5;
+        createGameBoard(amountOfRows, amountOfColumns);
+        setTilesRevealed(0);
     }
 
     /**
@@ -79,7 +81,7 @@ public class GameBoard {
      * @param amountOfColumns amount of columns game board should contain
      */
 
-    private void createGameBoard(int amountOfRows, int amountOfColumns) {
+    public void createGameBoard(int amountOfRows, int amountOfColumns) {
         List<GameTile> newGameBoard = new ArrayList<>();
         for (int i = 0; i < amountOfRows; i++) {
             for (int j = 0; j < amountOfColumns; j++) {
@@ -97,16 +99,18 @@ public class GameBoard {
      * @return the mile value of the revealed tile
      * @throws InvalidGameTileException is thrown if the tile can not be revealed
      */
-
+    //JPA attribute converter, JPA lifecycle
     public int revealTile(int rowNumber, int columnNumber) {
+        if (rowNumber > amountOfRows || columnNumber > amountOfColumns)
+            return -1;
         try {
             List<GameTile> gameTiles = new ArrayList<>();
-            if (gameTiles.get(rowNumber*getAmountOfColumns()+columnNumber).isRevealed())
+            if (getGameBoard().get((rowNumber*getAmountOfColumns())+columnNumber).isRevealed())
                 throw new InvalidGameTileException("Tile already opened");
             else {
                 setTilesRevealed(getTilesRevealed() + 1);
-                gameTiles.get(rowNumber*getAmountOfColumns()+columnNumber).setRevealed(true);
-                return gameTiles.get(rowNumber*getAmountOfColumns()+columnNumber).getMilesValue();
+                getGameBoard().get((rowNumber*getAmountOfColumns())+columnNumber).setRevealed(true);
+                return getGameBoard().get((rowNumber*getAmountOfColumns())+columnNumber).getMilesValue();
             }
         } catch (InvalidGameTileException invalidGameTileException) {
             return -1;
@@ -124,11 +128,14 @@ public class GameBoard {
             String rowInBoard = "";
             for (int j = 0; j < getAmountOfColumns(); j++) {
                 GameTile tile = getGameBoard().get(amountOfColumns*i + j);
+                System.out.println("i = " + i);
+                System.out.println("tile = " + tile);
                 if (tile.isRevealed())
                     rowInBoard = String.format("%s %3d", rowInBoard, tile.getMilesValue());
                 else
                     rowInBoard = String.format("%s %3c", rowInBoard, 'x');
             }
+            boardToPrint.add(rowInBoard);
         }
         for (String row : boardToPrint) {
             System.out.println(row);

@@ -19,10 +19,10 @@ public class RewardPartner {
     @GeneratedValue (strategy = GenerationType.SEQUENCE)
     private Long rewardPartnerId;
 
-    @Column (name = "company_name", unique = true)
+    @Column (name = "company_name", unique = true, nullable = false)
     private String companyName;
 
-    @Column (unique = true)
+    @Column (unique = true, nullable = false)
     private String email;
 
     @Column (name = "admin_password")
