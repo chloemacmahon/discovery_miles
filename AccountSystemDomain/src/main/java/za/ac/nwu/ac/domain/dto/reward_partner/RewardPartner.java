@@ -7,6 +7,7 @@ import za.ac.nwu.ac.domain.dto.reward.SubscriptionReward;
 import za.ac.nwu.ac.domain.dto.reward.VoucherReward;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @Data
 @Entity
@@ -20,12 +21,15 @@ public class RewardPartner {
     private Long rewardPartnerId;
 
     @Column (name = "company_name", unique = true, nullable = false)
+    @NotEmpty
     private String companyName;
 
     @Column (unique = true, nullable = false)
+    @NotEmpty
     private String email;
 
     @Column (name = "admin_password")
+    @NotEmpty
     private String adminPassword;
 
     public RewardPartner() {

@@ -3,10 +3,8 @@ package za.ac.nwu.ac.web.sb.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import za.ac.nwu.ac.domain.dto.reward.VoucherReward;
 import za.ac.nwu.ac.logic.RewardPartnerService;
 
@@ -14,24 +12,26 @@ import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/reward-partner")
-public class RewardPartnerController {
+public class RewardController {
 
     private RewardPartnerService rewardPartnerService;
 
     @Autowired
-    public RewardPartnerController(RewardPartnerService rewardPartnerService) {
+    public RewardController(RewardPartnerService rewardPartnerService) {
         this.rewardPartnerService = rewardPartnerService;
     }
 
-    @GetMapping("/create-voucher-reward")
+    /*@GetMapping("/create-voucher-reward")
     public String showCreateVoucherReward(Model model){
-        model.addAttribute("formData", new VoucherReward());
+        model.addAttribute("voucherReward", new VoucherReward());
         return "reward-partner/create-voucher-reward";
     }
 
-    @PostMapping("/create-voucher-reward")
-    public String createVoucherReward(@Valid Model model){
-        model.addAttribute("formData", new VoucherReward());
+    @RequestMapping(value ="/create-voucher-reward", method = RequestMethod.POST)
+    public String createVoucherReward(@Valid VoucherReward voucherReward, BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return "reward-partner/create-voucher-reward";
+        }
         return "reward-partner/create-voucher-reward";
-    }
+    }*/
 }

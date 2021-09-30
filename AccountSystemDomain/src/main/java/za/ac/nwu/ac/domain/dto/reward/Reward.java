@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import za.ac.nwu.ac.domain.dto.reward_partner.RewardPartner;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * Abstract class representing a reward that a user can buy in exchange for miles, child classes are <code>SubscriptionReward</code> and <code>VoucherReward</code>
@@ -21,9 +22,11 @@ public abstract class Reward implements Comparable<Reward> {
     @Column(name = "reward_id")
     private Long rewardID;
 
+    @NotEmpty
     @Column(name = "item_description")
     private String itemDescription;
 
+    @NotEmpty
     @Column(name = "mile_cost")
     private int mileCost;
 

@@ -13,6 +13,7 @@ import za.ac.nwu.ac.domain.dto.reward.Reward;
 import za.ac.nwu.ac.domain.exception.InsufficientMilesException;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +41,19 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long memberId;
     @Column
+    @NotEmpty
     private String name;
     @Column
+    @NotEmpty
     private String surname;
     @Column
+    @NotEmpty
     private String password;
     @Column(name = "id_number", unique = true, nullable = false)
+    @NotEmpty
     private String idNumber;
     @Column(unique = true, nullable = false)
+    @NotEmpty
     private String email;
     @Column
     private int miles;
