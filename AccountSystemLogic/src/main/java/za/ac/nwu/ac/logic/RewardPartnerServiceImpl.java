@@ -7,6 +7,8 @@ import za.ac.nwu.ac.domain.dto.reward.VoucherReward;
 import za.ac.nwu.ac.domain.dto.reward_partner.RewardPartner;
 import za.ac.nwu.ac.domain.exception.FailedToCreateRewardPartnerException;
 import za.ac.nwu.ac.domain.exception.IncorrectPasswordException;
+import za.ac.nwu.ac.domain.exception.InvalidEmailException;
+import za.ac.nwu.ac.domain.exception.InvalidPasswordException;
 import za.ac.nwu.ac.repository.*;
 
 
@@ -27,9 +29,15 @@ public class RewardPartnerServiceImpl implements RewardPartnerService{
 
     public RewardPartner registerRewardPartner(String companyName, String email, String password, int controlPasswordGiven){
         if (controlPassword == controlPasswordGiven){
-            RewardPartner rewardPartner = new RewardPartner(companyName, email, password);
-            rewardPartnerRepository.save(rewardPartner);
-            return rewardPartner;
+            if (Validator.isValidEmail(email)) {
+                if (Validator.isValidPassword(password)) {
+                    RewardPartner rewardPartner = new RewardPartner(companyName, email, password);
+                    rewardPartnerRepository.save(rewardPartner);
+                    return rewardPartner;
+                } else
+                    throw new InvalidPasswordException();
+            } else
+                throw new InvalidEmailException();
         } else
             throw new FailedToCreateRewardPartnerException("Password does not match control password");
     }

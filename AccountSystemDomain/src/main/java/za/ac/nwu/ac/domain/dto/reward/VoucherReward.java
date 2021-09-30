@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import za.ac.nwu.ac.domain.dto.reward_partner.RewardPartner;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * Represents a voucher reward that the za.ac.nwu.ac.domain.dto.member can buy with miles and get an amount to spend at the reward partner
@@ -21,6 +22,7 @@ public class VoucherReward extends Reward {
     @Column (name= "reward_id")
     private Long rewardID;
 
+    @NotEmpty
     @Column (name = "monetary_value")
     private double monetaryValue;
 

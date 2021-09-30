@@ -20,15 +20,13 @@
     <label for="drivinggoalprogress">Driving Goal Progress</label><br>
     <progress max="100" value="80" id="drivinggoalprogress"></progress><br><br>-->
     <tr>
-        <h3> Your current gameboard </h3>
+        <h3> dddYour current gameboard </h3>
     </tr>
     <tr th:each="gameRow : ${member.gameBoard.translateTo2DimList()}">
         <td th:each="gameTile : ${gameRow}">
             <label th:classappend="${gameTile.revealed} ?  shown-game-tile : hidden-game-tile"
                    th:text="${gameTile.revealed} ?  ${gameTile.milesValue} :' X '"></label>
-        </td>    <!--th:text="${gameTile.revealed} ?  ${gameTile.milesValue} :'X'"></td>
-        <input type="checkbox" id="activity" name="activity"><br><br>-->
-        <!--        <label for="activity" th:text="${gameTile.revealed} ?  ${gameTile.milesValue} :'X'"></label>-->
+        </td>
     </tr>
 </table>
 <table>
