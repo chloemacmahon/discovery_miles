@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add activity to za.ac.nwu.ac.domain.dto.goal</title>
+    <link rel="stylesheet"
+          href="css/general_style.css">
+</head>
+<body>
+    <h1>Goal progress</h1>
+    <form>
+        <label for="healthgoalprogress">Health Goal Progress</label><br>
+        <progress max="100" value="80" id="healthgoalprogress" class="health-progress-bar"></progress><br><br>
+        <label for="spendinggoalprogress">Spending Goal Progress</label><br>
+        <progress max="100" value="80" id="spendinggoalprogress"></progress><br><br>
+        <label for="drivinggoalprogress">Driving Goal Progress</label><br>
+        <progress max="100" value="80" id="drivinggoalprogress"></progress><br><br>
+        <h2>Add activity</h2>
+        <label>Which type of goal does this activity belong to?</label><br><br>
+        <div>
+            <input type="radio" id="rbhealthgoal" name="rbhealthgoal" value="Health za.ac.nwu.ac.domain.dto.goal">
+            <label for="rbhealthgoal">Health Goal</label><br><br>
+            <input type="radio" id="rbspendinggoal" name="rbspendinggoal" value="Spending za.ac.nwu.ac.domain.dto.goal">
+            <label for="rbspendinggoal">Spending Goal</label><br><br>
+            <input type="radio" id="rbdrivinggoal" name="rbdrivinggoal" value="Driving za.ac.nwu.ac.domain.dto.goal">
+            <label for="rbdrivinggoal">Driving Goal</label><br><br>
+        </div>
+
+        <label for="pointsofactivity">Points this activity earns</label>
+        <input type="number" id="pointsofactivity" name="pointsofactivity"><br><br>
+        <input class="button" type="submit" value="Add activity to Goal">
+    </form>
+</body>
+</html>

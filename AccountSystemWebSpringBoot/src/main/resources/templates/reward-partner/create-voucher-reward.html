@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.og">
+<head>
+    <meta charset="UTF-8">
+    <title>Vitality activities</title>
+    <link rel="stylesheet"
+          href="css/general_style.css">
+</head>
+<body>
+<form th:object="${formData}"
+      th:action="@{/reward-partner/create-reward}"
+      method="post">
+    <div>
+        <label for="description">What is the reward description: </label>
+        <input type="text" id="description" th:field="*{itemDescription}"><br><br>
+        <label for="mile-cost">What is the reward's mile cost: </label>
+        <input type="number" id="mile-cost" th:field="*{mileCost}"><br><br>
+        <label for="monetary-value">What is the reward's monetary value: </label>
+        <input type="number" id="monetary-value" th:field="*{monetaryValue}"><br><br>
+        <input type="submit" class="button" value="Add reward">
+    </div>
+</form>
+</body>
+</html>

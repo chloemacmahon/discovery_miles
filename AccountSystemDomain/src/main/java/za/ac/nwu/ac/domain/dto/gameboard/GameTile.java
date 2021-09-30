@@ -10,27 +10,32 @@ import java.util.Random;
  * Represents a game tile in the za.ac.nwu.ac.domain.dto.gameboard
  */
 @Data
-@Table (name = "game_tile")
+@Table(name = "game_tile")
 @Entity
 @Component
 public class GameTile {
+
+    private static int maxMilesValue = 600;
+
+    public static int getMaxMilesValue() {
+        return maxMilesValue;
+    }
+
+    public static void setMaxMilesValue(int maxMilesValue) {
+        GameTile.maxMilesValue = maxMilesValue;
+    }
+
 
     //Composite Key constraint
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long gameTileID;
-
     @Column(name = "miles_value")
     private int milesValue;
-
     @Column(name = "revealed")
     private boolean revealed;
-
     private int rowNumber;
-
     private int columnNumber;
-
-    private static int maxMilesValue = 600;
 
     public GameTile() {
     }
@@ -38,9 +43,9 @@ public class GameTile {
     /**
      * Receives the miles that the tile represents and a boolean value if the tile has been revealed
      *
-     * @param milesValue the miles that the tile represents
-     * @param revealed   a boolean value that shows if the tile is revealed
-     * @param rowNumber row number of the tile
+     * @param milesValue   the miles that the tile represents
+     * @param revealed     a boolean value that shows if the tile is revealed
+     * @param rowNumber    row number of the tile
      * @param columnNumber column number of the tile
      */
 

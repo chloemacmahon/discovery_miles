@@ -11,21 +11,27 @@ import za.ac.nwu.ac.domain.dto.goal.HealthGoal;
 import za.ac.nwu.ac.domain.dto.goal.SpendingGoal;
 import za.ac.nwu.ac.domain.dto.reward.Reward;
 import za.ac.nwu.ac.domain.exception.InsufficientMilesException;
-import za.ac.nwu.ac.domain.exception.InvalidGoalPointsException;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static za.ac.nwu.ac.domain.dto.helper_classes.ReceiveInputs.getIntInput;
-
 
 @Data
 @Entity
 @Component
 public class Member {
-    private static int totalPointsNecessary = 600;
+    private static int defaultGoalPoints = 600;
+
+    public static int getDefaultGoalPoints() {
+        return defaultGoalPoints;
+    }
+
+    public static void setDefaultGoalPoints(int defaultGoalPoints) {
+        Member.defaultGoalPoints = defaultGoalPoints;
+    }
+
     /**
      * This class represents a discovery vitality za.ac.nwu.ac.domain.dto.member
      */
@@ -175,9 +181,9 @@ public class Member {
 
     private List<Goal> createDefaultWeeklyGoals() {
         List<Goal> goals = new ArrayList<>();
-        goals.add(new HealthGoal(totalPointsNecessary));
-        goals.add(new DrivingGoal(totalPointsNecessary));
-        goals.add(new SpendingGoal(totalPointsNecessary));
+        goals.add(new HealthGoal(defaultGoalPoints));
+        goals.add(new DrivingGoal(defaultGoalPoints));
+        goals.add(new SpendingGoal(defaultGoalPoints));
         return goals;
     }
 

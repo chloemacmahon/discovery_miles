@@ -1,8 +1,10 @@
 package za.ac.nwu.ac.logic;
 
+import org.springframework.stereotype.Component;
 import za.ac.nwu.ac.domain.dto.member.Member;
 import za.ac.nwu.ac.domain.dto.reward.Reward;
 
+@Component
 public class SubtractMilesServiceImpl implements SubractMilesService{
 
     /**

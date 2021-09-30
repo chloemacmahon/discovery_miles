@@ -141,4 +141,18 @@ public class GameBoard {
             System.out.println(row);
         }
     }
+
+    public List<List<GameTile>> translateTo2DimList(){
+        List<List<GameTile>> boardToReturn = new ArrayList<>();
+
+        for (int i = 0; i < getAmountOfRows(); i++) {
+            List<GameTile> rowInBoard = new ArrayList<>();
+            for (int j = 0; j < getAmountOfColumns(); j++) {
+                GameTile tile = getGameBoard().get(amountOfColumns*i + j);
+                rowInBoard.add(tile);
+            }
+            boardToReturn.add(rowInBoard);
+        }
+        return boardToReturn;
+    }
 }
