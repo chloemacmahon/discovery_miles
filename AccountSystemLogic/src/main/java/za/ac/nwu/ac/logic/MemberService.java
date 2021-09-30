@@ -8,5 +8,13 @@ public interface MemberService {
 
     Member logInMember(String email, String password);
 
+    void updateMemberInDatabase(Member member);
+
     void resetWeeklyGoals(Member member);
+    
+    int viewMiles(Member member);
+
+    //View goal info
+    //View purchased rewards
+
 }

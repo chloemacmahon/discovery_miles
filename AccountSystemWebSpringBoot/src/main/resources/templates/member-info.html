@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.og">
+<head>
+    <meta charset="UTF-8">
+    <title>Vitality activities</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="css/general_style.css">
+</head>
+<body>
+<div th:replace="fragments/banner.html :: formField(mainHeading='Hello '+ ${member.name})"></div>
+<div class="navigation" th:replace="fragments/navigation :: navigation-bar"></div>
+    <h2 th:inline="text">You have [[${member.miles}]] miles in your account</h2>
+<table>
+    <!--<label for="healthgoalprogress">Health Goal Progress</label><br>
+    <progress max="100" id="healthgoalprogress" th:value="${@calculateService.percentageComplete(member.healthGoal.pointsEarned,member.healthGoal.pointsNecessary}"></progress><br><br>
+    <label for="spendinggoalprogress">Spending Goal Progress</label><br>
+    <progress max="100" value="80" id="spendinggoalprogress"></progress><br><br>
+    <label for="drivinggoalprogress">Driving Goal Progress</label><br>
+    <progress max="100" value="80" id="drivinggoalprogress"></progress><br><br>-->
+    <tr>
+        <h3> Your current gameboard </h3>
+    </tr>
+    <tr th:each="gameRow : ${member.gameBoard.translateTo2DimList()}">
+        <td th:each="gameTile : ${gameRow}">
+            <label th:classappend="${gameTile.revealed} ?  shown-game-tile : hidden-game-tile"
+                   th:text="${gameTile.revealed} ?  ${gameTile.milesValue} :' X '"></label>
+        </td>    <!--th:text="${gameTile.revealed} ?  ${gameTile.milesValue} :'X'"></td>
+        <input type="checkbox" id="activity" name="activity"><br><br>-->
+        <!--        <label for="activity" th:text="${gameTile.revealed} ?  ${gameTile.milesValue} :'X'"></label>-->
+    </tr>
+</table>
+<table>
+    <tr>
+        <th>Reward description</th>
+    </tr>
+    <tr th:each="reward : ${member.rewards}">
+        <td th:text="${reward.rewardDescription}"></td>
+    </tr>
+</table>
+</body>
+</html>

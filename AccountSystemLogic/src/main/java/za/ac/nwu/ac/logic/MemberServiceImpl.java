@@ -1,18 +1,24 @@
 package za.ac.nwu.ac.logic;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import za.ac.nwu.ac.domain.dto.member.Member;
-import za.ac.nwu.ac.domain.exception.IncorrectPasswordException;
-import za.ac.nwu.ac.domain.exception.InvalidEmailException;
-import za.ac.nwu.ac.domain.exception.InvalidIdNumberException;
-import za.ac.nwu.ac.domain.exception.InvalidPasswordException;
+import za.ac.nwu.ac.domain.exception.*;
 import za.ac.nwu.ac.repository.MemberRepository;
 
+import java.sql.SQLException;
+
+@EntityScan("za.ac.nwu.ac.domain.dto")
 @Component
 public class MemberServiceImpl implements MemberService{
 
     private MemberRepository memberRepository;
+
+    public MemberServiceImpl() {
+    }
 
     @Autowired
     public MemberServiceImpl(MemberRepository memberRepository) {
@@ -24,6 +30,7 @@ public class MemberServiceImpl implements MemberService{
         if (Validator.isValidPassword(password)) {
             if (Validator.isValidID(idNumber)) {
                 if (Validator.isValidEmail(email)) {
+                    System.out.println("In register member");
                     Member member = new Member(name, surname, password, idNumber, email);
                     memberRepository.save(member);
                     return member;
@@ -38,6 +45,9 @@ public class MemberServiceImpl implements MemberService{
     @Override
     public Member logInMember(String email, String password) {
         Member member = memberRepository.findByEmail(email);
+        if (member == null){
+            throw new FailedToLogInException();
+        }
         if (member.getPassword().equals(password))
             return member;
         else {
@@ -46,7 +56,15 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    public void updateMemberInDatabase(Member member){
+        memberRepository.save(member);
+    }
+
+    @Override
     public void resetWeeklyGoals(Member member) {
         member.resetGoals();
     }
+
+    @Override
+    public int viewMiles(Member member) {return member.getMiles();}
 }

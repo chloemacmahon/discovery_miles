@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.og">
+<head>
+    <meta charset="UTF-8">
+    <title>Vitality</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="css/general_style.css">
+</head>
+<div class="top-navigation" th:fragment="navigation-bar">
+    <a th:href="@{log-in\login}">Log In</a>
+    <!--        <a href="\discovery-miles\AccountSystemWebSpringBoot\src\main\resources\templates\log-in.html">Log In</a>-->
+    <a href="\discovery-miles\AccountSystemWebSpringBoot\src\main\resources\templates\view-goal.html">View weekly goals</a>
+    <a href="#contact">Contact</a>
+    <a href="#about">About</a>
+</div>
+</html>
