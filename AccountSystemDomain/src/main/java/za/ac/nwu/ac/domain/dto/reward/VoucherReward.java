@@ -22,7 +22,6 @@ public class VoucherReward extends Reward {
     @Column (name= "reward_id")
     private Long rewardID;
 
-    @NotEmpty
     @Column (name = "monetary_value")
     private double monetaryValue;
 
@@ -31,11 +30,6 @@ public class VoucherReward extends Reward {
 
     public VoucherReward(RewardPartner rewardPartner) {
         super(rewardPartner);
-    }
-
-    public VoucherReward(@NotEmpty String itemDescription, @NotEmpty int mileCost, @NotEmpty double monetaryValue) {
-        super(itemDescription, mileCost);
-        this.monetaryValue = monetaryValue;
     }
 
     public VoucherReward(String itemDescription, int mileCost, RewardPartner rewardPartner, double monetaryValue) {

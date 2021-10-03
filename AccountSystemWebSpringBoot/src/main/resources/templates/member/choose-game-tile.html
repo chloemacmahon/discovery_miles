@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.og">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Vitality activities</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet"
+          th:href="@{/css/general_style.css}">
 </head>
 <body>
-
+<div th:replace="fragments/banner.html :: formField(mainHeading='Hello '+ ${member.name})"></div>
+<div class="navigation" th:replace="fragments/navigation :: member-navigation-bar"></div>
+<table>
+    <tr>
+        <h3>Your current Game Board </h3>
+    </tr>
+    <tr th:each="gameRow : ${member.gameBoard.translateTo2DimList()}">
+        <td th:each="gameTile : ${gameRow}">
+            <a th:classappend="${gameTile.revealed} ?  shown-game-tile : hidden-game-tile"
+               th:text="${gameTile.revealed} ?  ${gameTile.milesValue} :' X '"
+               th:href="@{/member/choose-game-tile/{id}/{row}/{column}(id=${member.memberId}, row=${gameTile.rowNumber}, column=${gameTile.columnNumber})}"></a>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

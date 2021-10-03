@@ -22,11 +22,9 @@ public abstract class Reward implements Comparable<Reward> {
     @Column(name = "reward_id")
     private Long rewardID;
 
-    @NotEmpty
     @Column(name = "item_description")
     private String itemDescription;
 
-    @NotEmpty
     @Column(name = "mile_cost")
     private int mileCost;
 
@@ -40,11 +38,6 @@ public abstract class Reward implements Comparable<Reward> {
 
     public Reward(RewardPartner rewardPartner) {
         this.rewardPartner = rewardPartner;
-    }
-
-    public Reward(@NotEmpty String itemDescription, @NotEmpty int mileCost) {
-        this.itemDescription = itemDescription;
-        this.mileCost = mileCost;
     }
 
     protected Reward(String itemDescription, int mileCost, RewardPartner rewardPartner) {

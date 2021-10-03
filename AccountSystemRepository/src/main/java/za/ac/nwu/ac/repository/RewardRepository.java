@@ -11,4 +11,6 @@ public interface RewardRepository extends JpaRepository<Reward, Long> {
 
     List<Reward> findByMileCostLessThan(int mileValue);
 
+    Reward findByItemDescription(String itemDescription);
+
 }

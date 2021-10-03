@@ -40,12 +40,12 @@ public class RewardPartnerController {
         }
         try {
             RewardPartner rewardPartnerFromDatabase = rewardPartnerService.logInRewardPartner(user.getEmail(), user.getPassword());
-            model.addAttribute("reward-partner", rewardPartnerFromDatabase);
-        } catch (RuntimeException e) {
-            model.addAttribute("errorMessage", "e.getLocalizedMessage()");
+            model.addAttribute("rewardPartner", rewardPartnerFromDatabase);
+            return "reward/show-create-reward";
+        } catch (RuntimeException e){
+            model.addAttribute("errorMessage", "Invalid details entered");
             return "error/account-error";
         }
-        return "reward/create-voucher-reward";
     }
 
 }

@@ -129,7 +129,7 @@ public class AdminController {
             return "error/account-error";
         }
         try {
-            adminService.addNewActivity("Health",spendingActivity.getDescription(),spendingActivity.getPointsEarned());
+            adminService.addNewActivity("Spend",spendingActivity.getDescription(),spendingActivity.getPointsEarned());
             return "admin/show-create-activity";
         } catch (RuntimeException e) {
             model.addAttribute("errorMessage", e.getLocalizedMessage());
