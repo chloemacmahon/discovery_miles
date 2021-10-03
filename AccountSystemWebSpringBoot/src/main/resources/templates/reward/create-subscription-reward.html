@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.og">
+<head>
+    <meta charset="UTF-8">
+    <title>Vitality activities</title>
+    <link rel="stylesheet"
+          th:href="@{/css/general_style.css}">
+</head>
+<body>
+<div th:replace="fragments/banner.html :: formField(mainHeading='Create Subscription Reward')"></div>
+<div class="navigation" th:replace="fragments/navigation :: navigation-bar"></div>
+
+<div>
+        <form th:action="@{/reward/create-subscription-reward}" method="post">
+            <label for="description">Reward description: </label>
+            <input type="text" id="description" th:value="${itemDescription}" name="itemDescription"><br><br>
+            <label for="mile-cost">Mile cost: </label>
+            <input type="number" id="mile-cost" th:value="${mileCost}" name="mileCost"><br><br>
+            <label for="months-subscription">Months subscription: </label>
+            <input type="number" id="months-subscription" th:value="${monthsSubscription}" name="monthsSubscription"><br><br>
+            <input type="hidden" id="rewardPartner" th:value="${rewardPartner.rewardPartnerId}" name="rewardPartnerId">
+            <input type="submit" class="button" value="Add reward">
+        </form>
+    </div>
+</form>
+</body>
+</html>

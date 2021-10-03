@@ -16,11 +16,11 @@
 <div class="center">
     <h3>Your weekly goal progress</h3>
     <label for="healthgoalprogress">Health Goal Progress</label><br>
-    <progress max="100" id="healthgoalprogress" th:value="${member.healthGoal.percentageComplete()}"></progress><br><br>
+    <progress th:max="${member.healthGoal.pointsNecessary}" id="healthgoalprogress" th:value="${member.healthGoal.pointsEarned}"></progress><br><br>
     <label for="spendinggoalprogress">Spending Goal Progress</label><br>
-    <progress max="100" th:value="${member.spendingGoal.percentageComplete()}" id="spendinggoalprogress"></progress><br><br>
+    <progress th:max="${member.spendingGoal.pointsNecessary}" th:value="${member.spendingGoal.pointsEarned}" id="spendinggoalprogress"></progress><br><br>
     <label for="drivinggoalprogress">Driving Goal Progress</label><br>
-    <progress max="100" th:value="${member.drivingGoal.percentageComplete()}" id="drivinggoalprogress"></progress><br><br>
+    <progress th:max="${member.drivingGoal.pointsNecessary}" th:value="${member.drivingGoal.pointsEarned}" id="drivinggoalprogress"></progress><br><br>
 </div>
 <table>
     <tr>

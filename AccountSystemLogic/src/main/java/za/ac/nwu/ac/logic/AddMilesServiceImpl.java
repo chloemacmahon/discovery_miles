@@ -46,6 +46,7 @@ public class AddMilesServiceImpl implements AddMilesService{
             throw new InvalidGameTileException();
         } else {
             member.addMiles(miles);
+            memberRepository.save(member);
             System.out.println("You have earned " + miles + " miles by revealing this tile, your total miles is now " + member.getMiles());
         }
     }

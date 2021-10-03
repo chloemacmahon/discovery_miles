@@ -35,7 +35,7 @@ public class RewardPartner {
     public RewardPartner() {
     }
 
-    public RewardPartner(String companyName, String adminPassword, String email) {
+    public RewardPartner(String companyName, String email, String adminPassword) {
         this.companyName = companyName;
         this.email = email;
         this.adminPassword = adminPassword;

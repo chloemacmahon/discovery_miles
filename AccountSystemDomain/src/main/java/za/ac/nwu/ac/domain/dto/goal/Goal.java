@@ -88,7 +88,7 @@ public abstract class Goal {
     }
 
     public int percentageComplete(){
-        return Math.round(this.pointsEarned / this.pointsNecessary *100);
+        return Math.round(this.pointsEarned / this.pointsNecessary);
     }
 
     @Override

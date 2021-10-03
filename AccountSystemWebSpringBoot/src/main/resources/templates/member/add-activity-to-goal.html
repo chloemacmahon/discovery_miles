@@ -14,16 +14,37 @@
 <div class="center">
     <h3>Your weekly goal progress</h3>
     <label for="healthgoalprogress">Health Goal Progress</label><br>
-    <progress max="100" id="healthgoalprogress" th:value="${member.healthGoal.percentageComplete()}"></progress>
-    <br><br>
+    <progress th:max="${member.healthGoal.pointsNecessary}" id="healthgoalprogress" th:value="${member.healthGoal.pointsEarned}"></progress><br><br>
     <label for="spendinggoalprogress">Spending Goal Progress</label><br>
-    <progress max="100" th:value="${member.spendingGoal.percentageComplete()}" id="spendinggoalprogress"></progress>
-    <br><br>
+    <progress th:max="${member.spendingGoal.pointsNecessary}" th:value="${member.spendingGoal.pointsEarned}" id="spendinggoalprogress"></progress><br><br>
     <label for="drivinggoalprogress">Driving Goal Progress</label><br>
-    <progress max="100" th:value="${member.drivingGoal.percentageComplete()}" id="drivinggoalprogress"></progress>
-    <br><br>
+    <progress th:max="${member.drivingGoal.pointsNecessary}" th:value="${member.drivingGoal.pointsEarned}" id="drivinggoalprogress"></progress><br><br>
 </div>
-<form th:action="@{/member/add-activity-to-goal/{id}(id=${member.memberId})}" method="post">
+<table>
+    <tr>
+        <th><h3>Health activities</h3></th>
+        <th><h3>Driving activities</h3></th>
+        <th><h3>Spending activities</h3></th>
+    </tr>
+    <tr th:each="activity : ${activities}">
+        <div th:switch="${activity.activityType()}">
+            <div th:case="${'Health'}">
+                <td class="center" th:text="${activity.description}"></td>
+            </div>
+            <div th:case="${'Driving'}">
+                <td></td>
+                <td class="center" th:text="${activity.description}"></td>
+                <td></td>
+            </div>
+            <div th:case="${'Spending'}">
+                <td></td>
+                <td></td>
+                <td class="center" th:text="${activity.description}"></td>
+            </div>
+        </div>
+    </tr>
+</table>
+<form th:action="@{/member/add-activity-to-goal/{id}(id=${member.memberId})}" class="center" method="post">
     <h3>Select activity to add</h3>
 <!--    <select th:field="*{activityId}">-->
     <select id="activityId" name="activityId">
@@ -33,48 +54,9 @@
                 th:selected="${activityId == activity.id}">
         </option>
     </select>
+    <br><br>
     <button type="submit" class="button">Add activity</button>
 </form>
-<table>
-    <tr>
-        <th><h3>Health activities</h3></th>
-        <th><h3>Driving activities</h3></th>
-        <th><h3>Spending activities</h3></th>
-    </tr>
-    <!--<tr th:each="activity : ${activities}">
-        &lt;!&ndash;<div th:switch="${activity.activityType()}">
-            <div th:case="${'Health'}">
-                <td class="left"><input type="checkbox" th:text="${activity.description}"></input><br></td>
-            </div>
-            <div th:case="${'Driving'}">
-                <td></td>
-                <td><input type="checkbox" th:text="${activity.description}"></input><br></td>
-                <td></td>
-            </div>
-            <div th:case="${'Spending'}">
-                <td></td>
-                <td></td>
-                <td><input type="checkbox" th:text="${activity.description}"></input><br></td>
-            </div>
-        </div>&ndash;&gt;
-    </tr>-->
-</table>
-<!--<form>
-    <h2>Add activity</h2>
-    <label>Which type of goal does this activity belong to?</label><br><br>
-    &lt;!&ndash;<div>
-        <input type="radio" id="rbhealthgoal" name="rbhealthgoal" value="Health za.ac.nwu.ac.domain.dto.goal">
-        <label for="rbhealthgoal">Health Goal</label><br><br>
-        <input type="radio" id="rbspendinggoal" name="rbspendinggoal" value="Spending za.ac.nwu.ac.domain.dto.goal">
-        <label for="rbspendinggoal">Spending Goal</label><br><br>
-        <input type="radio" id="rbdrivinggoal" name="rbdrivinggoal" value="Driving za.ac.nwu.ac.domain.dto.goal">
-        <label for="rbdrivinggoal">Driving Goal</label><br><br>
-    </div>
 
-    <label for="pointsofactivity">Points this activity earns</label>
-    <input type="number" id="pointsofactivity" name="pointsofactivity"><br><br>
-    <input class="button" type="submit" value="Add activity to Goal">&ndash;&gt;
-
-</form>-->
 </body>
 </html>

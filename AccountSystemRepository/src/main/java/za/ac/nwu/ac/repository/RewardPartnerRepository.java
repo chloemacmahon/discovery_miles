@@ -6,6 +6,5 @@ import za.ac.nwu.ac.domain.dto.reward_partner.RewardPartner;
 
 @Repository
 public interface RewardPartnerRepository extends JpaRepository<RewardPartner, Long> {
-
     RewardPartner findByEmail(String email);
 }

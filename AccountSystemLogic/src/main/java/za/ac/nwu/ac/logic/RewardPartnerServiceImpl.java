@@ -2,7 +2,7 @@ package za.ac.nwu.ac.logic;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import za.ac.nwu.ac.domain.dto.member.Member;
+import za.ac.nwu.ac.domain.dto.reward.Reward;
 import za.ac.nwu.ac.domain.dto.reward.SubscriptionReward;
 import za.ac.nwu.ac.domain.dto.reward.VoucherReward;
 import za.ac.nwu.ac.domain.dto.reward_partner.RewardPartner;
@@ -19,10 +19,16 @@ public class RewardPartnerServiceImpl implements RewardPartnerService{
 
     private RewardRepository rewardRepository;
 
+    private VoucherRewardRepository voucherRewardRepository;
+
+    private SubscriptionRewardRepository subscriptionRewardRepository;
+
     @Autowired
-    public RewardPartnerServiceImpl(RewardPartnerRepository rewardPartnerRepository, RewardRepository rewardRepository) {
+    public RewardPartnerServiceImpl(RewardPartnerRepository rewardPartnerRepository, RewardRepository rewardRepository, VoucherRewardRepository voucherRewardRepository, SubscriptionRewardRepository subscriptionRewardRepository) {
         this.rewardPartnerRepository = rewardPartnerRepository;
         this.rewardRepository = rewardRepository;
+        this.voucherRewardRepository = voucherRewardRepository;
+        this.subscriptionRewardRepository = subscriptionRewardRepository;
     }
 
     public RewardPartner registerRewardPartner(String companyName, String email, String password, int controlPasswordGiven){
@@ -54,13 +60,16 @@ public class RewardPartnerServiceImpl implements RewardPartnerService{
 
     public SubscriptionReward createSubscriptionReward(String itemDescription, int mileCost, int monthsSubscription , RewardPartner rewardPartner){
         SubscriptionReward subscriptionReward = new SubscriptionReward(itemDescription,mileCost,rewardPartner,monthsSubscription);
-        rewardRepository.save(subscriptionReward);
+        subscriptionRewardRepository.save(subscriptionReward);
         return subscriptionReward;
     }
 
     public VoucherReward createVoucherReward(String itemDescription, int mileCost, double monetaryValue , RewardPartner rewardPartner) {
+        if (rewardPartner == null){
+            throw new RuntimeException("Reward partner 0");
+        }
         VoucherReward voucherReward = new VoucherReward(itemDescription,mileCost,rewardPartner,monetaryValue);
-        rewardRepository.save(voucherReward);
+        voucherRewardRepository.save(voucherReward);
         return voucherReward;
     }
 

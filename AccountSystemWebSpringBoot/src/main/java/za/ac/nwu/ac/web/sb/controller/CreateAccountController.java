@@ -64,7 +64,7 @@ public class CreateAccountController {
     @RequestMapping(value ="/reward-partner/create-account", method = RequestMethod.POST)
     public String createRewardPartnerAccount(@Valid RewardPartner rewardPartner, BindingResult bindingResult, Model model){
         if (bindingResult.hasErrors()){
-            model.addAttribute("errorMessage", new String("Invalid details entered"));
+            model.addAttribute("errorMessage", "Invalid details entered");
             return "error/account-error";
         }
         try {
@@ -74,7 +74,7 @@ public class CreateAccountController {
             return "error/account-error";
         }
 //        model.addAttribute("voucher-reward",new VoucherReward());
-        return "reward/create-voucher-reward";
+        return "reward/show-create-reward";
     }
 
     @RequestMapping(value = "/member/create-account", method = RequestMethod.GET)

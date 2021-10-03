@@ -104,15 +104,18 @@ class MemberController {
                 Member member = memberRepository.findById(id).get();
                 Activity activity = activityRepository.findById(activityId).get();
                 if (activity instanceof HealthActivity){
-                    if(addMilesService.addPointsToHealthGoal((HealthActivity) activity, member)){
+                    if(addMilesService.addPointsToGoal(activity.getPointsEarned(),member.getHealthGoal())){//addMilesService.addPointsToHealthGoal((HealthActivity) activity, member)){
+                        model.addAttribute("member",memberRepository.findById(id).get());
                         return "/member/choose-game-tile";
                     }
                 } else if (activity instanceof DrivingActivity){
-                    if(addMilesService.addPointsToDrivingGoal((DrivingActivity) activity, member)){
+                    if(addMilesService.addPointsToGoal(activity.getPointsEarned(),member.getDrivingGoal())){//addMilesService.addPointsToDrivingGoal((DrivingActivity) activity, member)){
+                        model.addAttribute("member",memberRepository.findById(id).get());
                         return "/member/choose-game-tile";
                     }
                 } else if (activity instanceof SpendingActivity){
-                    if(addMilesService.addPointsToSpendingGoal((SpendingActivity) activity, member)){
+                    if(addMilesService.addPointsToGoal(activity.getPointsEarned(),member.getSpendingGoal())){//(addMilesService.addPointsToSpendingGoal((SpendingActivity) activity, member)){
+                        model.addAttribute("member",memberRepository.findById(id).get());
                         return "/member/choose-game-tile";
                     }
                 } else {
@@ -130,6 +133,19 @@ class MemberController {
         model.addAttribute("member",memberRepository.findById(id).get());
         model.addAttribute("activities", memberService.viewActivities());
         return "member/add-activity-to-goal";
+    }
+
+    @RequestMapping(value = "choose-game-tile/{id}/{row}/{column}",method = RequestMethod.GET)
+    public String addActivity(@PathVariable Long id, @PathVariable int row, @PathVariable int column, Model model){
+        if (id != null){
+            addMilesService.chooseGameTile(row, column, memberRepository.findById(id).get());
+            Member member = memberRepository.findById(id).get();
+            model.addAttribute("member", member);
+            return "member/member-info";
+        } else {
+            model.addAttribute("errorMessage", "No activity selected");
+            return "error/account-error";
+        }
     }
 
 }
