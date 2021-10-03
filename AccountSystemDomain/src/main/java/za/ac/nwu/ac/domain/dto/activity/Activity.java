@@ -5,6 +5,8 @@ import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Data
 @Entity
@@ -17,15 +19,20 @@ public abstract class Activity {
     @GeneratedValue (strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String name;
+    @Column(unique = true)
+    @NotEmpty
+    private String description;
 
+    @NotNull
     private int pointsEarned;
 
     public Activity() {
     }
 
-    public Activity(String name, int pointsEarned) {
-        this.name = name;
+    public Activity(String description, int pointsEarned) {
+        this.description = description;
         this.pointsEarned = pointsEarned;
     }
+
+    public abstract String activityType();
 }

@@ -11,9 +11,6 @@ import za.ac.nwu.ac.repository.MemberRepository;
 
 
 @SpringBootApplication
-/*@EntityScan("za.ac.nwu.ac.domain.dto")
-@EnableJpaRepositories({"za.ac.nwu.ac.repository"})
-@ComponentScan({"za.ac.nwu.ac.logic", "za.ac.nwu.ac.web.sb.controller"})*/
 public class MemberApplication{
 
     public static void main(String... args){

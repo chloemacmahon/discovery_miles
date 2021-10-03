@@ -29,6 +29,15 @@ public class VoucherReward extends Reward {
     public VoucherReward() {
     }
 
+    public VoucherReward(RewardPartner rewardPartner) {
+        super(rewardPartner);
+    }
+
+    public VoucherReward(@NotEmpty String itemDescription, @NotEmpty int mileCost, @NotEmpty double monetaryValue) {
+        super(itemDescription, mileCost);
+        this.monetaryValue = monetaryValue;
+    }
+
     public VoucherReward(String itemDescription, int mileCost, RewardPartner rewardPartner, double monetaryValue) {
         super(itemDescription, mileCost, rewardPartner);
         this.monetaryValue = monetaryValue;

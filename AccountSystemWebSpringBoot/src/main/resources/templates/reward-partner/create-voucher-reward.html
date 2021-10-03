@@ -4,21 +4,23 @@
     <meta charset="UTF-8">
     <title>Vitality activities</title>
     <link rel="stylesheet"
-          href="css/general_style.css">
+          th:href="@{/css/general_style.css}">
 </head>
 <body>
+<div th:replace="fragments/banner.html :: formField(mainHeading='Welcome Reward Partner!')"></div>
+<div class="navigation" th:replace="fragments/navigation :: navigation-bar"></div>
 
-    <div>
-        <form th:object="${voucherReward}" th:action="@{/reward_partner/create-voucher-reward}" method="post">
+<div>
+        <form th:action="@{/reward/create-voucher-reward}" method="post">
             <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
                 <p th:text="#{voucherReward.hasErrors}">Error Message</p>
             </div>
             <label for="description">What is the reward description: </label>
-            <input type="text" id="description" th:field="*{itemDescription}"><br><br>
+            <input type="text" id="description" th:name="itemDescription"><br><br>
             <label for="mile-cost">What is the reward's mile cost: </label>
-            <input type="number" id="mile-cost" th:field="*{mileCost}"><br><br>
+            <input type="number" id="mile-cost" th:name="mileCost"><br><br>
             <label for="monetary-value">What is the reward's monetary value: </label>
-            <input type="number" id="monetary-value" th:field="*{monetaryValue}"><br><br>
+            <input type="number" id="monetary-value" th:name="monetaryValue"><br><br>
             <input type="submit" class="button" value="Add reward">
         </form>
     </div>

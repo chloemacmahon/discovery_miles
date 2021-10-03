@@ -1,15 +1,15 @@
 package za.ac.nwu.ac.logic;
 
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import za.ac.nwu.ac.domain.dto.activity.Activity;
 import za.ac.nwu.ac.domain.dto.member.Member;
 import za.ac.nwu.ac.domain.exception.*;
+import za.ac.nwu.ac.repository.ActivityRepository;
 import za.ac.nwu.ac.repository.MemberRepository;
 
-import java.sql.SQLException;
+import java.util.List;
 
 @EntityScan("za.ac.nwu.ac.domain.dto")
 @Component
@@ -17,12 +17,15 @@ public class MemberServiceImpl implements MemberService{
 
     private MemberRepository memberRepository;
 
+    private ActivityRepository activityRepository;
+
     public MemberServiceImpl() {
     }
 
     @Autowired
-    public MemberServiceImpl(MemberRepository memberRepository) {
+    public MemberServiceImpl(MemberRepository memberRepository, ActivityRepository activityRepository) {
         this.memberRepository = memberRepository;
+        this.activityRepository = activityRepository;
     }
 
     @Override
@@ -30,7 +33,6 @@ public class MemberServiceImpl implements MemberService{
         if (Validator.isValidPassword(password)) {
             if (Validator.isValidID(idNumber)) {
                 if (Validator.isValidEmail(email)) {
-                    System.out.println("In register member");
                     Member member = new Member(name, surname, password, idNumber, email);
                     memberRepository.save(member);
                     return member;
@@ -67,4 +69,9 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public int viewMiles(Member member) {return member.getMiles();}
+
+    @Override
+    public List<Activity> viewActivities(){
+        return activityRepository.findAll();
+    }
 }

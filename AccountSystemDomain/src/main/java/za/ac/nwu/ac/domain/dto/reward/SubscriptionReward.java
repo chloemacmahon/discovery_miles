@@ -26,6 +26,10 @@ public class SubscriptionReward extends Reward {
 
     public SubscriptionReward(){};
 
+    public SubscriptionReward(RewardPartner rewardPartner) {
+        super(rewardPartner);
+    }
+
     public SubscriptionReward(String itemDescription, int mileCost, RewardPartner rewardPartner, int monthsSubscription) {
         super(itemDescription, mileCost, rewardPartner);
         this.monthsSubscription = monthsSubscription;

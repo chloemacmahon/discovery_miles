@@ -6,21 +6,25 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet"
-          href="css/general_style.css">
+          th:href="@{/css/general_style.css}">
 </head>
 <body>
 <div th:replace="fragments/banner.html :: formField(mainHeading='Hello '+ ${member.name})"></div>
-<div class="navigation" th:replace="fragments/navigation :: navigation-bar"></div>
+<div class="navigation" th:replace="fragments/navigation :: member-navigation-bar"></div>
     <h2 th:inline="text">You have [[${member.miles}]] miles in your account</h2>
-<table>
-    <!--<label for="healthgoalprogress">Health Goal Progress</label><br>
-    <progress max="100" id="healthgoalprogress" th:value="${@calculateService.percentageComplete(member.healthGoal.pointsEarned,member.healthGoal.pointsNecessary}"></progress><br><br>
+
+<div class="center">
+    <h3>Your weekly goal progress</h3>
+    <label for="healthgoalprogress">Health Goal Progress</label><br>
+    <progress max="100" id="healthgoalprogress" th:value="${member.healthGoal.percentageComplete()}"></progress><br><br>
     <label for="spendinggoalprogress">Spending Goal Progress</label><br>
-    <progress max="100" value="80" id="spendinggoalprogress"></progress><br><br>
+    <progress max="100" th:value="${member.spendingGoal.percentageComplete()}" id="spendinggoalprogress"></progress><br><br>
     <label for="drivinggoalprogress">Driving Goal Progress</label><br>
-    <progress max="100" value="80" id="drivinggoalprogress"></progress><br><br>-->
+    <progress max="100" th:value="${member.drivingGoal.percentageComplete()}" id="drivinggoalprogress"></progress><br><br>
+</div>
+<table>
     <tr>
-        <h3> dddYour current gameboard </h3>
+        <h3>Your current Game Board </h3>
     </tr>
     <tr th:each="gameRow : ${member.gameBoard.translateTo2DimList()}">
         <td th:each="gameTile : ${gameRow}">
@@ -30,6 +34,7 @@
     </tr>
 </table>
 <table>
+    <h3>Your purchased rewards</h3>
     <tr>
         <th>Reward description</th>
     </tr>
@@ -37,5 +42,9 @@
         <td th:text="${reward.rewardDescription}"></td>
     </tr>
 </table>
+<div>
+    <a class="button" type="button" th:href="@{/member/member-info}">Home</a>
+    <a class="button" type="button" th:href="@{/member/add-activity-to-goal/{id}(id=${member.memberId})}">Add activity</a>
+</div>
 </body>
 </html>

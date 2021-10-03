@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet"
-          href="css/general_style.css">
+          th:href="@{/css/general_style.css}">
 </head>
 <body>
 <div th:replace="fragments/banner.html :: formField(mainHeading='Welcome Reward Partner!')"></div>
@@ -16,6 +16,7 @@
     <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
         <p th:text="#{rewardPartner.hasErrors}">Error Message</p>
     </div>
+    <br>
     <label for="company-name">Company name: </label>
     <input type="text" id="company-name" th:field="*{companyName}"><br><br>
     <label for="email">Email: </label>

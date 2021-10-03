@@ -16,6 +16,8 @@ import za.ac.nwu.ac.repository.AdminRepository;
 import za.ac.nwu.ac.repository.MemberRepository;
 import za.ac.nwu.ac.repository.RewardPartnerRepository;
 
+import java.sql.SQLException;
+
 @Component
 public class AdminServiceImpl implements AdminService {
 
@@ -48,6 +50,9 @@ public class AdminServiceImpl implements AdminService {
 
     public Admin logInAdmin(String email, String password) {
         Admin admin = adminRepository.findByEmail(email);
+        if (admin == null){
+            throw new FailedToLogInException();
+        }
         if (admin.getPassword().equals(password))
             return admin;
         else {
@@ -83,18 +88,18 @@ public class AdminServiceImpl implements AdminService {
             throw new InvalidPasswordException();
     }
 
-    public Activity addNewActivity(String activityType, String activityName, int pointsEarned) {
+    public Activity addNewActivity(String activityType, String description, int pointsEarned) {
         switch (activityType) {
             case "Health":
-                HealthActivity healthActivity = new HealthActivity(activityName, pointsEarned);
+                HealthActivity healthActivity = new HealthActivity(description, pointsEarned);
                 activityRepository.save(healthActivity);
                 return healthActivity;
             case "Drive":
-                DrivingActivity drivingActivity = new DrivingActivity(activityName, pointsEarned);
+                DrivingActivity drivingActivity = new DrivingActivity(description, pointsEarned);
                 activityRepository.save(drivingActivity);
                 return drivingActivity;
-            case "Spending":
-                SpendingActivity spendingActivity = new SpendingActivity(activityName, pointsEarned);
+            case "Spend":
+                SpendingActivity spendingActivity = new SpendingActivity(description, pointsEarned);
                 activityRepository.save(spendingActivity);
                 return spendingActivity;
             default:

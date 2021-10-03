@@ -87,6 +87,10 @@ public abstract class Goal {
         }
     }
 
+    public int percentageComplete(){
+        return Math.round(this.pointsEarned / this.pointsNecessary *100);
+    }
+
     @Override
     public String toString() {
         return "Goal{" +

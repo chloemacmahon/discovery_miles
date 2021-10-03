@@ -15,7 +15,11 @@ public class HealthActivity extends Activity{
     public HealthActivity() {
     }
 
-    public HealthActivity(String name, int pointsEarned) {
-        super(name, pointsEarned);
+    public HealthActivity(String description, int pointsEarned) {
+        super(description, pointsEarned);
+    }
+
+    public String activityType(){
+        return "Health";
     }
 }
