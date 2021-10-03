@@ -6,12 +6,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import za.ac.nwu.ac.domain.dto.reward.VoucherReward;
+import za.ac.nwu.ac.domain.dto.reward_partner.RewardPartner;
 import za.ac.nwu.ac.logic.RewardPartnerService;
 
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/reward-partner")
+@RequestMapping("/reward")
 public class RewardController {
 
     private RewardPartnerService rewardPartnerService;
@@ -21,17 +22,28 @@ public class RewardController {
         this.rewardPartnerService = rewardPartnerService;
     }
 
-    /*@GetMapping("/create-voucher-reward")
-    public String showCreateVoucherReward(Model model){
-        model.addAttribute("voucherReward", new VoucherReward());
+    @RequestMapping(value = "/create-voucher-reward", method = RequestMethod.GET)
+    public String showCreateVoucherReward(Model model){ //@RequestParam(value = "itemDescription",required = true) String itemDescription, @RequestParam(value = "mileCost",required = true) int mileCost, @RequestParam(value = "monetaryValue",required = true) double monetaryValue){
+        model.addAttribute("itemDescription", new String());
+        int mileCost = 0;
+        model.addAttribute("mileCost", mileCost);
+        double monetaryValue = 0.0;
+        model.addAttribute("monetaryValue", monetaryValue);
         return "reward-partner/create-voucher-reward";
     }
 
     @RequestMapping(value ="/create-voucher-reward", method = RequestMethod.POST)
-    public String createVoucherReward(@Valid VoucherReward voucherReward, BindingResult bindingResult){
+    public String createVoucherReward(BindingResult bindingResult, Model model){
         if (bindingResult.hasErrors()){
-            return "reward-partner/create-voucher-reward";
+            model.addAttribute("errorMessage", "Could not create reward");
+            return "error/account-error";
+        }
+        try {
+            rewardPartnerService.createVoucherReward((String) model.asMap().get("itemDescription"), (int) model.asMap().get("mileCost"), (double) model.asMap().get("monetaryValue"),(RewardPartner) model.asMap().get("reward-partner"));
+        }catch(RuntimeException e){
+            model.addAttribute("errorMessage", e.getLocalizedMessage());
+            return "error/account-error";
         }
         return "reward-partner/create-voucher-reward";
-    }*/
+    }
 }

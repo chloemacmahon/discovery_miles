@@ -38,6 +38,15 @@ public abstract class Reward implements Comparable<Reward> {
     public Reward() {
     }
 
+    public Reward(RewardPartner rewardPartner) {
+        this.rewardPartner = rewardPartner;
+    }
+
+    public Reward(@NotEmpty String itemDescription, @NotEmpty int mileCost) {
+        this.itemDescription = itemDescription;
+        this.mileCost = mileCost;
+    }
+
     protected Reward(String itemDescription, int mileCost, RewardPartner rewardPartner) {
         this.itemDescription = itemDescription;
         this.mileCost = mileCost;

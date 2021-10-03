@@ -1,7 +1,6 @@
 package za.ac.nwu.ac.logic;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import za.ac.nwu.ac.domain.dto.activity.Activity;
 import za.ac.nwu.ac.domain.dto.activity.DrivingActivity;
@@ -10,21 +9,26 @@ import za.ac.nwu.ac.domain.dto.activity.SpendingActivity;
 import za.ac.nwu.ac.domain.dto.goal.Goal;
 import za.ac.nwu.ac.domain.dto.member.Member;
 import za.ac.nwu.ac.domain.exception.InvalidGameTileException;
-import za.ac.nwu.ac.domain.exception.InvalidGoalPointsException;
 import za.ac.nwu.ac.repository.ActivityRepository;
+import za.ac.nwu.ac.repository.GoalRepository;
+import za.ac.nwu.ac.repository.MemberRepository;
 
 import java.util.List;
-
-import static za.ac.nwu.ac.domain.dto.helper_classes.ReceiveInputs.getIntInput;
 
 @Component
 public class AddMilesServiceImpl implements AddMilesService{
 
     private ActivityRepository activityRepository;
 
+    private GoalRepository goalRepository;
+
+    private MemberRepository memberRepository;
+
     @Autowired
-    public AddMilesServiceImpl(ActivityRepository activityRepository) {
+    public AddMilesServiceImpl(ActivityRepository activityRepository, GoalRepository goalRepository, MemberRepository memberRepository) {
         this.activityRepository = activityRepository;
+        this.goalRepository = goalRepository;
+        this.memberRepository = memberRepository;
     }
 
     /**
@@ -57,6 +61,7 @@ public class AddMilesServiceImpl implements AddMilesService{
     public boolean addPointsToGoal(int points, Goal goal) {
         if(!goal.isGoalAccomplished()){
             goal.addPoints(points);
+            goalRepository.save(goal);
             return goal.isGoalAccomplished();
         }
         return false;
@@ -71,6 +76,7 @@ public class AddMilesServiceImpl implements AddMilesService{
 
     @Override
     public boolean addPointsToHealthGoal(HealthActivity healthActivity, Member member) {
+        System.out.println(healthActivity.getPointsEarned());
         return addPointsToGoal(healthActivity.getPointsEarned(), member.getHealthGoal());
     }
 

@@ -2,13 +2,11 @@ package za.ac.nwu.ac.logic;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import za.ac.nwu.ac.domain.dto.member.Member;
 import za.ac.nwu.ac.domain.dto.reward.SubscriptionReward;
 import za.ac.nwu.ac.domain.dto.reward.VoucherReward;
 import za.ac.nwu.ac.domain.dto.reward_partner.RewardPartner;
-import za.ac.nwu.ac.domain.exception.FailedToCreateRewardPartnerException;
-import za.ac.nwu.ac.domain.exception.IncorrectPasswordException;
-import za.ac.nwu.ac.domain.exception.InvalidEmailException;
-import za.ac.nwu.ac.domain.exception.InvalidPasswordException;
+import za.ac.nwu.ac.domain.exception.*;
 import za.ac.nwu.ac.repository.*;
 
 
@@ -44,6 +42,9 @@ public class RewardPartnerServiceImpl implements RewardPartnerService{
 
     public RewardPartner logInRewardPartner(String email, String password){
         RewardPartner rewardPartner = rewardPartnerRepository.findByEmail(email);
+        if (rewardPartner == null){
+            throw new FailedToLogInException("No such user in the system");
+        }
         if (rewardPartner.getAdminPassword().equals(password))
             return rewardPartner;
         else {

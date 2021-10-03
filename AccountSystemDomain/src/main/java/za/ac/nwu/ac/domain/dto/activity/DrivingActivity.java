@@ -15,7 +15,11 @@ public class DrivingActivity extends Activity{
     public DrivingActivity() {
     }
 
-    public DrivingActivity(String name, int pointsEarned) {
-        super(name, pointsEarned);
+    public DrivingActivity(String description, int pointsEarned) {
+        super(description, pointsEarned);
+    }
+
+    public String activityType(){
+        return "Driving";
     }
 }

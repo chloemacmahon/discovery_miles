@@ -122,6 +122,10 @@ table {
   color: black;
 }
 
+.center {
+    text-align:center;
+}
+
 /*.top-navigation a.active {
   background-color: #04AA6D;
   color: white;

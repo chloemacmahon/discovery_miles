@@ -40,14 +40,4 @@ public class AccountTypeController {
         return "log-in";
     }
 
-    @RequestMapping(value="/view-profile")
-    public String getMember(Model model){
-        /*Member member = memberRepository.findByEmail("jamie.van.wyk@candle.com");
-        addMilesService.chooseGameTile(2,3,member);
-        memberService.updateMemberInDatabase(member);*/
-        model.addAttribute("member", memberRepository.findByEmail("jamie.van.wyk@candle.com"));
-        return "member-info";
-    }
-
-
 }

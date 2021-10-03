@@ -16,7 +16,11 @@ public class SpendingActivity extends Activity{
     public SpendingActivity() {
     }
 
-    public SpendingActivity(String name, int pointsEarned) {
-        super(name, pointsEarned);
+    public SpendingActivity(String description, int pointsEarned) {
+        super(description, pointsEarned);
+    }
+
+    public String activityType(){
+        return "Spending";
     }
 }
