@@ -107,6 +107,14 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+     public Admin findAdminById(Long id){
+        try {
+            return adminRepository.findById(id).get();
+        } catch (RuntimeException e){
+            throw new FailedToCreateAdminException();
+        }
+     }
+
     public void changeDefaultGoalPoints(int points) {
         Member.setDefaultGoalPoints(points);
     }

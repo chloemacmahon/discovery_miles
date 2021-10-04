@@ -14,5 +14,7 @@ public interface RewardPartnerService {
 
     VoucherReward createVoucherReward(String itemDescription, int mileCost, double monetaryValue , RewardPartner rewardPartner);
 
+    RewardPartner findRewardPartnerById(Long id);
+
     //VoucherReward createVoucherRewardWithDifferentCurrency(String itemDescription, int mileCost, double monetaryValue , RewardPartner rewardPartner, ExchangeRate exchangeRate);
 }

@@ -33,18 +33,20 @@
         </td>
     </tr>
 </table>
+<h3 style="size: large" >Your purchased rewards</h3><br>
 <table>
-    <h3>Your purchased rewards</h3>
     <tr>
-        <th>Reward description</th>
+        <th><h3 style="size:small">Reward description</h3></th>
     </tr>
     <tr th:each="reward : ${member.rewards}">
-        <td th:text="${reward.rewardDescription}"></td>
+        <td th:text="${reward.itemDescription}" class="center"></td>
     </tr>
 </table>
-<div>
+<br>
+<div class="center">
     <a class="button" type="button" th:href="@{/member/member-info}">Home</a>
     <a class="button" type="button" th:href="@{/member/add-activity-to-goal/{id}(id=${member.memberId})}">Add activity</a>
+    <a class="button" type="button" th:href="@{/member/purchase-reward/{id}(id=${member.memberId})}">Purchase reward</a>
 </div>
 </body>
 </html>

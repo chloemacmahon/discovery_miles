@@ -1,5 +1,7 @@
 package za.ac.nwu.ac.web.sb.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +21,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller
-public class CreateAccountController {
+public class AccountController {
     private RewardPartnerService rewardPartnerService;
 
     private AdminService adminService;
@@ -27,10 +29,20 @@ public class CreateAccountController {
     private MemberService memberService;
 
     @Autowired
-    public CreateAccountController(RewardPartnerService rewardPartnerService, AdminService adminService, MemberService memberService) {
+    public AccountController(RewardPartnerService rewardPartnerService, AdminService adminService, MemberService memberService) {
         this.rewardPartnerService = rewardPartnerService;
         this.adminService = adminService;
         this.memberService = memberService;
+    }
+
+    @RequestMapping(value = "/show-create-account", method = RequestMethod.GET)
+    public String showCreateAccount(Model model){
+        return "/show-create-account";
+    }
+
+    @RequestMapping(value = "/show-log-in", method = RequestMethod.GET)
+    public String showLogIn(Model model){
+        return "/show-log-in";
     }
 
     @RequestMapping(value = "/admin/create-account", method = RequestMethod.GET)
@@ -48,11 +60,11 @@ public class CreateAccountController {
         try {
             model.addAttribute("activeAdmin",adminService.registerAdmin(admin.getEmail(), admin.getPassword(), 3879));
             model.addAttribute("activeAccountType","admin");
+            return "admin/show-create-activity";
         } catch (RuntimeException e){
             model.addAttribute("errorMessage", e.getLocalizedMessage());
             return "error/account-error";
         }
-        return "admin/create-account";
     }
 
     @RequestMapping(value = "/reward-partner/create-account", method = RequestMethod.GET)
@@ -94,6 +106,7 @@ public class CreateAccountController {
             model.addAttribute("member", memberFromDatabase);
             return "member/member-info";
         } catch (RuntimeException e){
+
             model.addAttribute("errorMessage", e.getLocalizedMessage());
             return "error/account-error";
         }

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.og">
+<head>
+    <meta charset="UTF-8">
+    <title>Vitality activities</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet"
+          th:href="@{/css/general_style.css}">
+</head>
+<body>
+<div th:replace="fragments/banner.html :: formField(mainHeading='Hello '+ ${member.name})"></div>
+<div class="navigation" th:replace="fragments/navigation :: member-navigation-bar"></div>
+<table>
+    <h2>Available rewards</h2>
+    <tr>
+        <th><h3>Description &nbsp;</h3></th>
+        <th><h3>Reward Partner &nbsp;</h3></th>
+        <th><h3>Mile Cost &nbsp;</h3></th>
+        <!--<th class="h3">Monetary Value</th>&nbsp;
+        <th class="h3">Months' subscription</th>&nbsp;-->
+    </tr>
+    <tr th:each="reward : ${affordableRewards}">
+        <td class="center" th:text="${reward.itemDescription}"></td>
+        <td class="center" th:text="${reward.rewardPartner.companyName}"></td>
+        <td class="center" th:text="${reward.mileCost}"></td>
+        <!--<td th:if="${reward instanceof T(VoucherReward) ? (VoucherReward)reward.monetaryValue : '-'}"></td>
+        <td th:if="${reward instanceof T(SubscriptionReward) ? 'reward.monthsSubscription' : '-'}"></td>-->
+    </tr>
+</table>
+<form th:action="@{/member/purchase-reward/{id}(id=${member.memberId})}" class="center" method="post">
+    <h3>Select reward to purchase</h3>
+    <!--    <select th:field="*{activityId}">-->
+    <select id="rewardId" name="rewardId">
+        <option th:each="reward : ${affordableRewards}"
+                th:text="${reward.itemDescription}"
+                th:value="${reward.rewardID}"
+                th:selected="${rewardId == reward.rewardID}">
+        </option>
+    </select>
+    <br><br>
+    <button type="submit" class="button">Purchase Reward</button>
+</form>
+</body>
+</html>

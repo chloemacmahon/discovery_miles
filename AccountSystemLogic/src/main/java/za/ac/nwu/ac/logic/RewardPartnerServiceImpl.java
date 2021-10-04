@@ -73,5 +73,13 @@ public class RewardPartnerServiceImpl implements RewardPartnerService{
         return voucherReward;
     }
 
+    public RewardPartner findRewardPartnerById(Long id){
+        try {
+            return rewardPartnerRepository.findById(id).get();
+        } catch (RuntimeException e){
+            throw new FailedToCreateRewardPartnerException();
+        }
+    }
+
 }
 
