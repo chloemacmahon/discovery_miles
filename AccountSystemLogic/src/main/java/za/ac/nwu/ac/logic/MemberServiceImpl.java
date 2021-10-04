@@ -74,4 +74,13 @@ public class MemberServiceImpl implements MemberService{
     public List<Activity> viewActivities(){
         return activityRepository.findAll();
     }
+
+    @Override
+    public Member findMemberById(Long id) {
+        try {
+            return memberRepository.findById(id).get();
+        } catch (RuntimeException e){
+            throw new FailedToCreateRewardPartnerException();
+        }
+    }
 }

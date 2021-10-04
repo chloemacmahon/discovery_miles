@@ -11,6 +11,6 @@ class ExchangeRateTest {
     @Test
     void calculateDollarAmount() {
         ExchangeRate exchangeRate = new ExchangeRate("RSA","South Africa",'R',14.90);
-        Assertions.assertEquals(exchangeRate.calculateDollarAmount(100.0),6.71);
+        Assertions.assertEquals(exchangeRate.calculateRandAmount(100.0),6.71);
     }
 }

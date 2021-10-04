@@ -19,6 +19,8 @@ public interface MemberService {
 
     List<Activity> viewActivities();
 
+    Member findMemberById(Long id);
+
     //View goal info
     //View purchased rewards
 

@@ -9,14 +9,13 @@
           th:href="@{/css/general_style.css}">
 </head>
 <body>
-<div th:replace="fragments/banner.html :: formField(mainHeading='Add activies')"></div>
+<div th:replace="fragments/banner.html :: formField(mainHeading='Log In')"></div>
 <div class="navigation" th:replace="fragments/navigation :: navigation-bar"></div>
 <div class="center">
     <br>
-    <a class="button" type="button" th:href="@{/admin/show-create-health-activity}">Create health activity</a>
-    <a class="button" type="button" th:href="@{/admin/show-create-driving-activity}">Create driving activity</a>
-    <a class="button" type="button" th:href="@{/admin/show-create-spending-activity}">Create spending activity</a>
-    <a class="button" type="button" th:href="@{/admin/create-exchange-rate}">Create Exchange Rate</a>
+    <a class="button" type="button" th:href="@{/admin/log-in}">Log Into Admin Account</a>
+    <a class="button" type="button" th:href="@{/reward-partner/log-in}">Log Into Reward Partner Account</a>
+    <a class="button" type="button" th:href="@{/member/log-in}">Log Into Member Account</a>
 </div>
 </body>
 </html>

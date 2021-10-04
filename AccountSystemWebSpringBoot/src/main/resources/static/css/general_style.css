@@ -80,6 +80,7 @@ table {
 }
 
 .hidden-game-tile {
+  min-width: 90px;
   background-color: DarkKhaki;
   border: none;
   color: white;
@@ -92,6 +93,7 @@ table {
 
 
 .shown-game-tile {
+  min-width: 90px;
   background-color: DarkOliveGreen;
   border: none;
   color: white;

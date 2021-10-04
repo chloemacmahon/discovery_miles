@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.og">
+<head>
+    <meta charset="UTF-8">
+    <title>Vitality activities</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet"
+          th:href="@{/css/general_style.css}">
+</head>
+<body>
+<div th:replace="fragments/banner.html :: formField(mainHeading='Welcome Admin!')"></div>
+<div class="navigation" th:replace="fragments/navigation :: navigation-bar"></div>
+
+<form th:object="${exchangeRate}" th:action="@{/admin/exchangeRate}" method="post">
+    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger">
+        <p th:text="#{admin.hasErrors}">Error Message</p>
+    </div>
+    <br>
+    <label for="country-code">Country code: </label>
+    <input type="text" id="country-code" th:field="*{countryCode}"><br><br>
+    <label for="country-name">Country Name: </label>
+    <input type="text" id="country-name" th:field="*{countryName}"><br><br>
+    <label for="currency-symbol">Currency Symbol: </label>
+    <input type="text" id="currency-symbol" th:field="*{currencySymbol}"><br><br>
+    <label for="to-rand-exchange-rate">Country Name: </label>
+    <input type="number" id="to-rand-exchange-rate" th:field="*{toRandExchangeRate}"><br><br>
+    <button type="submit" class="button">Create Account</button>
+</form>
+</body>
+</html>

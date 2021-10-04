@@ -7,19 +7,22 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import za.ac.nwu.ac.domain.dto.activity.Activity;
 import za.ac.nwu.ac.domain.dto.activity.DrivingActivity;
 import za.ac.nwu.ac.domain.dto.activity.HealthActivity;
 import za.ac.nwu.ac.domain.dto.activity.SpendingActivity;
 import za.ac.nwu.ac.domain.dto.member.Member;
+import za.ac.nwu.ac.domain.dto.reward.Reward;
 import za.ac.nwu.ac.domain.dto.user.User;
 import za.ac.nwu.ac.logic.AddMilesService;
 import za.ac.nwu.ac.logic.MemberService;
+import za.ac.nwu.ac.logic.SubtractMilesService;
 import za.ac.nwu.ac.repository.ActivityRepository;
 import za.ac.nwu.ac.repository.MemberRepository;
+import za.ac.nwu.ac.repository.RewardRepository;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -34,12 +37,19 @@ class MemberController {
 
     private final AddMilesService addMilesService;
 
+    private final SubtractMilesService subtractMilesService;
+
+    private final RewardRepository rewardRepository;
+
+
     @Autowired
-    MemberController(MemberRepository memberRepository, ActivityRepository activityRepository, MemberService memberService, AddMilesService addMilesService) {
+    MemberController(MemberRepository memberRepository, ActivityRepository activityRepository, MemberService memberService, AddMilesService addMilesService, SubtractMilesService subtractMilesService, RewardRepository rewardRepository) {
         this.memberRepository = memberRepository;
         this.activityRepository = activityRepository;
         this.memberService = memberService;
         this.addMilesService = addMilesService;
+        this.subtractMilesService = subtractMilesService;
+        this.rewardRepository = rewardRepository;
     }
 
     @RequestMapping(value = "/log-in", method = RequestMethod.GET)
@@ -144,6 +154,34 @@ class MemberController {
             return "member/member-info";
         } else {
             model.addAttribute("errorMessage", "No activity selected");
+            return "error/account-error";
+        }
+    }
+
+    @RequestMapping(value = "purchase-reward/{id}", method = RequestMethod.GET)
+    public String showPurchaseReward(@PathVariable Long id, Model model){
+        try{
+            Member member = memberService.findMemberById(id);
+            model.addAttribute("member", member);
+            List<Reward> affordableRewards = subtractMilesService.showAllAffordableRewards(member.getMiles());
+            model.addAttribute("affordableRewards", affordableRewards);
+            model.addAttribute("rewardId", 0L);
+            return "member/purchase-reward";
+        } catch (RuntimeException e){
+            model.addAttribute("errorMessage", "Error displaying reward");
+            return "error/account-error";
+        }
+    }
+
+    @RequestMapping(value = "purchase-reward/{id}", method = RequestMethod.POST)
+    public String purchaseReward(@PathVariable Long id, @RequestParam Long rewardId, Model model){
+        try{
+            Member member = memberService.findMemberById(id);
+            model.addAttribute("member", member);
+            subtractMilesService.chooseReward(rewardRepository.findById(rewardId).get(), member);
+            return "member/member-info";
+        } catch (RuntimeException e){
+            model.addAttribute("errorMessage", "Error displaying reward");
             return "error/account-error";
         }
     }

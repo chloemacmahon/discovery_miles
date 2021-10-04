@@ -11,9 +11,11 @@ import za.ac.nwu.ac.domain.dto.activity.DrivingActivity;
 import za.ac.nwu.ac.domain.dto.activity.HealthActivity;
 import za.ac.nwu.ac.domain.dto.activity.SpendingActivity;
 import za.ac.nwu.ac.domain.dto.admin.Admin;
-import za.ac.nwu.ac.domain.dto.member.Member;
+import za.ac.nwu.ac.domain.dto.exchange_rate.ExchangeRate;
 import za.ac.nwu.ac.domain.dto.user.User;
 import za.ac.nwu.ac.logic.AdminService;
+import za.ac.nwu.ac.logic.CurrencyConverterService;
+import za.ac.nwu.ac.repository.ExchangeRateRepository;
 
 import javax.validation.Valid;
 
@@ -23,9 +25,15 @@ public class AdminController {
 
     private final AdminService adminService;
 
+    /*private final CurrencyConverterService currencyConverterService;
+
+    private final ExchangeRateRepository exchangeRateRepository;*/
+
     @Autowired
-    public AdminController(AdminService adminService) {
+    public AdminController(AdminService adminService){//, CurrencyConverterService currencyConverterService, ExchangeRateRepository exchangeRateRepository) {
         this.adminService = adminService;
+        /*this.currencyConverterService = currencyConverterService;
+        this.exchangeRateRepository = exchangeRateRepository;*/
     }
 
     @RequestMapping(value = "/log-in", method = RequestMethod.GET)
@@ -137,5 +145,24 @@ public class AdminController {
         }
     }
 
+    @RequestMapping(value = "/add-exchange-rate", method = RequestMethod.GET)
+    public String showCreateExchangeRate(Model model) {
+        model.addAttribute("exchangeRate",new ExchangeRate());
+        return "/admin/create-exchange-rate";
+    }
 
+    @RequestMapping(value = "/add-exchange-rate", method = RequestMethod.POST)
+    public String createExchangeRate(@Valid ExchangeRate exchangeRate,Model model, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("errorMessage", "Invalid details entered");
+            return "error/account-error";
+        }
+        try {
+            /*exchangeRateRepository.save(exchangeRate);*/
+            return "admin/show-create-activity";
+        } catch (RuntimeException e) {
+            model.addAttribute("errorMessage", e.getLocalizedMessage());
+            return "error/account-error";
+        }
+    }
 }

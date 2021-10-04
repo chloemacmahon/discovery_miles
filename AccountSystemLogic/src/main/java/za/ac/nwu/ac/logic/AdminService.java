@@ -17,6 +17,8 @@ public interface AdminService {
 
     Activity addNewActivity(String activityType, String activityName, int pointsEarned);
 
+    Admin findAdminById(Long id);
+
     void changeDefaultGoalPoints(int points);
 
     void changeMaxMilesValue(int maxMilesValue);
