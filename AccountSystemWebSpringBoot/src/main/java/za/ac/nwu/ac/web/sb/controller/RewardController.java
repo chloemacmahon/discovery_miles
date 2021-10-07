@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import za.ac.nwu.ac.domain.dto.reward_partner.RewardPartner;
+import za.ac.nwu.ac.logic.CurrencyConverterService;
 import za.ac.nwu.ac.logic.RewardPartnerService;
 import za.ac.nwu.ac.repository.RewardPartnerRepository;
 
@@ -19,10 +20,13 @@ public class RewardController {
 
     private final RewardPartnerRepository rewardPartnerRepository;
 
+    private final CurrencyConverterService currencyConverterService;
+
     @Autowired
-    public RewardController(RewardPartnerService rewardPartnerService, RewardPartnerRepository rewardPartnerRepository) {
+    public RewardController(RewardPartnerService rewardPartnerService, RewardPartnerRepository rewardPartnerRepository, CurrencyConverterService currencyConverterService) {
         this.rewardPartnerService = rewardPartnerService;
         this.rewardPartnerRepository = rewardPartnerRepository;
+        this.currencyConverterService = currencyConverterService;
     }
 
     @RequestMapping(value = "/show-create-reward", method = RequestMethod.GET)
@@ -76,6 +80,34 @@ public class RewardController {
             model.addAttribute("rewardPartner",rewardPartner);
             return "reward/show-create-reward";
         } catch (RuntimeException e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "error/account-error";
+        }
+    }
+
+    @RequestMapping(value = "/create-voucher-reward-with-currency-translator/{rewardPartnerId}", method = RequestMethod.GET)
+    public String showCreateVoucherRewardWithCurrencyTranslator(@PathVariable Long rewardPartnerId, Model model) {
+        model.addAttribute("itemDescription", "");
+        int mileCost = 0;
+        model.addAttribute("mileCost", mileCost);
+        double monetaryValue = 0.0;
+        model.addAttribute("monetaryValue", monetaryValue);
+        model.addAttribute("rewardPartner", rewardPartnerRepository.findById(rewardPartnerId).get());
+        model.addAttribute("rewardPartnerId", rewardPartnerId);
+        model.addAttribute("countryCode","");
+        return "reward/create-voucher-reward-with-currency-translator";
+    }
+
+    @RequestMapping(value = "/create-voucher-reward-with-currency-translator", method = RequestMethod.POST)
+    public String createVoucherRewardWithCurrencyTranslator(@RequestParam String itemDescription, @RequestParam int mileCost, @RequestParam double monetaryValue, @RequestParam Long rewardPartnerId, @RequestParam String countryCode,Model model) {
+        try {
+            double convertedAmount = currencyConverterService.convertToRand(monetaryValue, currencyConverterService.findExchangeRateByCountryCode(countryCode));
+            RewardPartner rewardPartner = rewardPartnerRepository.findById(rewardPartnerId).get();
+            rewardPartnerService.createVoucherReward(itemDescription, mileCost, convertedAmount, rewardPartner);
+            model.addAttribute("rewardPartner",rewardPartner);
+            return "reward/show-create-reward";
+        } catch (RuntimeException e) {
+            LoggingController.logError("Could not create reward");
             model.addAttribute("errorMessage", e.getMessage());
             return "error/account-error";
         }

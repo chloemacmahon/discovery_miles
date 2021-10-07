@@ -1,6 +1,8 @@
 
 package za.ac.nwu.ac.logic;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.stereotype.Component;
@@ -66,6 +68,8 @@ public class CurrencyConverterServiceImpl implements CurrencyConverterService {
     @Transactional(rollbackOn = PurposefulException.class)
     public void throwExceptionAndRollback(ExchangeRate exchangeRate) throws PurposefulException{
         exchangeRateRepository.save(exchangeRate);
+        /*logger.info("Item added to database");
+        logger.info("Exception being thrown");*/
         throw new PurposefulException();
     }
 

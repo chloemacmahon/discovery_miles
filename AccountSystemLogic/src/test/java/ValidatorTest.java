@@ -46,4 +46,18 @@ public class ValidatorTest {
 
         Assertions.assertFalse(Validator.isValidEmail(email));
     }
+    
+    @Test
+    void verifyValidNameTest() {
+        String name = "jane";
+
+        Assertions.assertTrue(Validator.isValidName(name));
+    }
+
+    @Test
+    void verifyInvalidNameTest() {
+        String name = "jane@za";
+
+        Assertions.assertFalse(Validator.isValidEmail(name));
+    }
 }
