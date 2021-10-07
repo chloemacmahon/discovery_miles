@@ -2,6 +2,7 @@ package za.ac.nwu.ac.domain.dto.activity;
 
 
 import lombok.Data;
+import org.hibernate.annotations.Generated;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;

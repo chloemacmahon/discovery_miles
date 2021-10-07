@@ -56,6 +56,6 @@ public class ExchangeRate {
      */
 
     public double calculateRandAmount(double amountToExchange) {
-        return (double)Math.round(amountToExchange / getToRandExchangeRate()*100)/100;
+        return (double)Math.round(getToRandExchangeRate()*amountToExchange *100)/100;
     }
 }

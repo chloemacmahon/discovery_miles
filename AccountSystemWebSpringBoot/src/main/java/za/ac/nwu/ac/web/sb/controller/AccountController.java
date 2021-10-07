@@ -62,6 +62,7 @@ public class AccountController {
             model.addAttribute("activeAccountType","admin");
             return "admin/show-create-activity";
         } catch (RuntimeException e){
+            LoggingController.logError("Could not register admin");
             model.addAttribute("errorMessage", e.getLocalizedMessage());
             return "error/account-error";
         }
@@ -82,6 +83,7 @@ public class AccountController {
         try {
             model.addAttribute("rewardPartner", rewardPartnerService.registerRewardPartner(rewardPartner.getCompanyName(), rewardPartner.getEmail(), rewardPartner.getAdminPassword(), 6523));
         } catch (RuntimeException e){
+            LoggingController.logError("Could not register reward partner");
             model.addAttribute("errorMessage", e.getLocalizedMessage());
             return "error/account-error";
         }
@@ -106,7 +108,7 @@ public class AccountController {
             model.addAttribute("member", memberFromDatabase);
             return "member/member-info";
         } catch (RuntimeException e){
-
+            LoggingController.logError("Could not register member");
             model.addAttribute("errorMessage", e.getLocalizedMessage());
             return "error/account-error";
         }

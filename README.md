@@ -25,13 +25,14 @@
    - explain
 - [x] Has an optional field on add service that will cause service to throw an exception 
 - [x] Demonstrates roll-back occurs if an exception occurs 
-- [ ] Logging was included (-1)
+- [x] Logging was included
 
 ##Could haves 
 - [ ] Can run in docker (-0.5)
+  - tried didn't work
 - [x] Can handle more than one currency
-    - Can handle points, miles and rands, remember to configure translate currency service
 - [ ] 80% unit tests in code coverage (-0.5)
+  - tried mockito didn't want to work
 
 ##Will not haves
 - [x] Front end that calls services

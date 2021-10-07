@@ -14,6 +14,8 @@ import za.ac.nwu.ac.domain.dto.admin.Admin;
 import za.ac.nwu.ac.domain.dto.exchange_rate.ExchangeRate;
 import za.ac.nwu.ac.domain.dto.user.User;
 import za.ac.nwu.ac.logic.AdminService;
+import za.ac.nwu.ac.logic.CurrencyConverterService;
+import za.ac.nwu.ac.repository.ExchangeRateRepository;
 
 import javax.validation.Valid;
 
@@ -23,15 +25,15 @@ public class AdminController {
 
     private final AdminService adminService;
 
-   /* private final CurrencyConverterService currencyConverterService;
+   private final CurrencyConverterService currencyConverterService;
 
-    private final ExchangeRateRepository exchangeRateRepository;*/
+    private final ExchangeRateRepository exchangeRateRepository;
 
     @Autowired
-    public AdminController(AdminService adminService){//}, CurrencyConverterService currencyConverterService, ExchangeRateRepository exchangeRateRepository) {
+    public AdminController(AdminService adminService, CurrencyConverterService currencyConverterService, ExchangeRateRepository exchangeRateRepository) {
         this.adminService = adminService;
-        /*this.currencyConverterService = currencyConverterService;
-        this.exchangeRateRepository = exchangeRateRepository;*/
+        this.currencyConverterService = currencyConverterService;
+        this.exchangeRateRepository = exchangeRateRepository;
     }
 
     @RequestMapping(value = "/log-in", method = RequestMethod.GET)
@@ -43,6 +45,7 @@ public class AdminController {
     @RequestMapping(value = "/log-in", method = RequestMethod.POST)
     public String logInToMemberAccount(@Valid User user, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            LoggingController.logError("Could not log in admin");
             model.addAttribute("errorMessage", "Invalid details entered");
             return "error/account-error";
         }
@@ -50,6 +53,7 @@ public class AdminController {
             Admin adminFromDatabase = adminService.logInAdmin(user.getEmail(), user.getPassword());
             return "admin/show-create-activity";
         } catch (RuntimeException e) {
+            LoggingController.logError("Could not log in admin");
             model.addAttribute("errorMessage", e.getLocalizedMessage());
             return "error/account-error";
         }
@@ -82,6 +86,7 @@ public class AdminController {
     public String createActivity(Activity activity, Model model, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessage", "Invalid details entered");
+            LoggingController.logError("Could not create activity");
             return "error/account-error";
         }
         try {
@@ -93,6 +98,7 @@ public class AdminController {
                 adminService.addNewActivity("Spend",activity.getDescription(),activity.getPointsEarned());
             return "admin/show-create-activity";
         } catch (RuntimeException e) {
+            LoggingController.logError("Could not create activity");
             model.addAttribute("errorMessage", e.getLocalizedMessage());
             return "error/account-error";
         }
@@ -102,12 +108,14 @@ public class AdminController {
     public String createHealthActivity(HealthActivity healthActivity, Model model, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessage", "Invalid details entered");
+            LoggingController.logError("Could not create activity");
             return "error/account-error";
         }
         try {
                 adminService.addNewActivity("Health",healthActivity.getDescription(),healthActivity.getPointsEarned());
             return "admin/show-create-activity";
         } catch (RuntimeException e) {
+            LoggingController.logError("Could not create activity");
             model.addAttribute("errorMessage", e.getLocalizedMessage());
             return "error/account-error";
         }
@@ -117,12 +125,14 @@ public class AdminController {
     public String createDrivingActivity(DrivingActivity drivingActivity, Model model, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessage", "Invalid details entered");
+            LoggingController.logError("Could not create activity");
             return "error/account-error";
         }
         try {
             adminService.addNewActivity("Drive",drivingActivity.getDescription(),drivingActivity.getPointsEarned());
             return "admin/show-create-activity";
         } catch (RuntimeException e) {
+            LoggingController.logError("Could not create activity");
             model.addAttribute("errorMessage", e.getLocalizedMessage());
             return "error/account-error";
         }
@@ -132,33 +142,36 @@ public class AdminController {
     public String createSpendingActivity(SpendingActivity spendingActivity, Model model, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessage", "Invalid details entered");
+            LoggingController.logError("Could not create activity");
             return "error/account-error";
         }
         try {
             adminService.addNewActivity("Spend",spendingActivity.getDescription(),spendingActivity.getPointsEarned());
             return "admin/show-create-activity";
         } catch (RuntimeException e) {
+            LoggingController.logError("Could not create activity");
             model.addAttribute("errorMessage", e.getLocalizedMessage());
             return "error/account-error";
         }
     }
 
-    @RequestMapping(value = "/add-exchange-rate", method = RequestMethod.GET)
+    @RequestMapping(value = "/create-exchange-rate", method = RequestMethod.GET)
     public String showCreateExchangeRate(Model model) {
         model.addAttribute("exchangeRate",new ExchangeRate());
         return "/admin/create-exchange-rate";
     }
 
-    @RequestMapping(value = "/add-exchange-rate", method = RequestMethod.POST)
+    @RequestMapping(value = "/create-exchange-rate", method = RequestMethod.POST)
     public String createExchangeRate(@Valid ExchangeRate exchangeRate,Model model, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("errorMessage", "Invalid details entered");
             return "error/account-error";
         }
         try {
-            //exchangeRateRepository.save(exchangeRate);
+            currencyConverterService.createExchangeRate(exchangeRate);
             return "admin/show-create-activity";
         } catch (RuntimeException e) {
+            LoggingController.logError("Could not create exchange rate");
             model.addAttribute("errorMessage", e.getLocalizedMessage());
             return "error/account-error";
         }
