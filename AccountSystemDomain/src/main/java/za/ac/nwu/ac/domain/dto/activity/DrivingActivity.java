@@ -12,6 +12,10 @@ import javax.persistence.*;
 @DiscriminatorValue("Drive")
 public class DrivingActivity extends Activity{
 
+    /**
+     * Completing activities of this type earn points towards the member's weekly driving goal
+     */
+
     public DrivingActivity() {
     }
 

@@ -21,9 +21,6 @@ public abstract class Goal {
     @GeneratedValue (strategy = GenerationType.SEQUENCE)
     private Long goalID;
 
-    @Column(name = "type",nullable = false, length = 10)
-    private String goalType;
-
     @Column(name = "points_necessary")
     private int pointsNecessary;
 
@@ -42,12 +39,10 @@ public abstract class Goal {
 
     /**
      * Constructor that creates a za.ac.nwu.ac.domain.dto.goal without any points being earned towards completing it and the current date as starting date
-     * @param goalType the type of za.ac.nwu.ac.domain.dto.goal that the za.ac.nwu.ac.domain.dto.member is working towards accomplishing
      * @param pointsNecessary the total amount of points that is necessary to accomplish the za.ac.nwu.ac.domain.dto.goal
      */
 
-    public Goal(String goalType, int pointsNecessary) {
-        this.goalType = goalType;
+    public Goal(int pointsNecessary) {
         this.pointsNecessary = pointsNecessary;
         setPointsEarned(0);
         setGoalAccomplished(false);
@@ -56,15 +51,13 @@ public abstract class Goal {
 
     /**
      * Constructor that creates a za.ac.nwu.ac.domain.dto.goal that already exists from the database
-     * @param goalType the type of za.ac.nwu.ac.domain.dto.goal that the za.ac.nwu.ac.domain.dto.member is working towards accomplishing
      * @param pointsNecessary the total amount of points that is necessary to accomplish the za.ac.nwu.ac.domain.dto.goal
      * @param pointsEarned the amount of points that a za.ac.nwu.ac.domain.dto.member has earned so far
      * @param goalAccomplished a boolean value indicating if the za.ac.nwu.ac.domain.dto.goal has been accomplished
      * @param startDate the date at which the za.ac.nwu.ac.domain.dto.member has started working towards their za.ac.nwu.ac.domain.dto.goal
      */
 
-    public Goal(String goalType, int pointsNecessary, int pointsEarned, boolean goalAccomplished, LocalDate startDate) {
-        this.goalType = goalType;
+    public Goal(int pointsNecessary, int pointsEarned, boolean goalAccomplished, LocalDate startDate) {
         this.pointsNecessary = pointsNecessary;
         this.pointsEarned = pointsEarned;
         this.goalAccomplished = goalAccomplished;

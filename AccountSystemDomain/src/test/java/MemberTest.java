@@ -53,10 +53,5 @@ class MemberTest {
         Assertions.assertTrue(exception.getMessage().contains("Not enough miles available"));
     }
 
-    /*@Test
-    void revealTileTest() {
-        Member member = new Member("","","","","");
-
-    }*/
 
 }

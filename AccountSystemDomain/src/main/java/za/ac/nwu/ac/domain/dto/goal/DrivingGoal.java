@@ -21,10 +21,10 @@ public class DrivingGoal extends Goal {
     }
 
     public DrivingGoal(int totalPointsNeeded){
-        super("Driving", totalPointsNeeded);
+        super(totalPointsNeeded);
     }
 
     public DrivingGoal(int totalPointsNeeded, int pointsEarned, boolean goalAccomplished, LocalDate startDate) {
-        super("Driving", totalPointsNeeded, pointsEarned, goalAccomplished, startDate);
+        super(totalPointsNeeded, pointsEarned, goalAccomplished, startDate);
     }
 }

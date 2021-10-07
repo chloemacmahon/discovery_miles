@@ -16,8 +16,6 @@ import za.ac.nwu.ac.repository.AdminRepository;
 import za.ac.nwu.ac.repository.MemberRepository;
 import za.ac.nwu.ac.repository.RewardPartnerRepository;
 
-import java.sql.SQLException;
-
 @Component
 public class AdminServiceImpl implements AdminService {
 
@@ -40,17 +38,21 @@ public class AdminServiceImpl implements AdminService {
     }
 
     public Admin registerAdmin(String email, String password, int controlPasswordGiven) {
-        if (controlPassword == controlPasswordGiven){
-            Admin admin = new Admin(email, password);
-            adminRepository.save(admin);
-            return admin;
+        if (controlPassword == controlPasswordGiven) {
+            if (Validator.isValidPassword(password)) {
+                Admin admin = new Admin(email, password);
+                adminRepository.save(admin);
+                return admin;
+            } else {
+                throw new IncorrectPasswordException();
+            }
         } else
             throw new FailedToCreateAdminException("Password does not match control password");
     }
 
     public Admin logInAdmin(String email, String password) {
         Admin admin = adminRepository.findByEmail(email);
-        if (admin == null){
+        if (admin == null) {
             throw new FailedToLogInException();
         }
         if (admin.getPassword().equals(password))
@@ -60,66 +62,41 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
-
-    public Member registerMember(String name, String surname, String idNumber, String email, String password) {
-        if (Validator.isValidPassword(password)) {
-            if (Validator.isValidID(idNumber)) {
-                if (Validator.isValidEmail(email)) {
-                    Member member = new Member(name, surname, password, idNumber, email);
-                    memberRepository.save(member);
-                    return member;
-                } else
-                    throw new InvalidEmailException();
-            } else
-                throw new InvalidIdNumberException();
-        } else
-            throw new InvalidPasswordException();
-    }
-
-    public RewardPartner registerRewardPartner(String companyName, String email, String adminPassword) {
-        if (Validator.isValidPassword(adminPassword)) {
-            if (Validator.isValidEmail(email)) {
-                RewardPartner rewardPartner = new RewardPartner(companyName, email, adminPassword);
-                rewardPartnerRepository.save(rewardPartner);
-                return rewardPartner;
-            } else
-                throw new InvalidEmailException();
-        } else
-            throw new InvalidPasswordException();
-    }
-
     public Activity addNewActivity(String activityType, String description, int pointsEarned) {
-        switch (activityType) {
-            case "Health":
-                HealthActivity healthActivity = new HealthActivity(description, pointsEarned);
-                activityRepository.save(healthActivity);
-                return healthActivity;
-            case "Drive":
-                DrivingActivity drivingActivity = new DrivingActivity(description, pointsEarned);
-                activityRepository.save(drivingActivity);
-                return drivingActivity;
-            case "Spend":
-                SpendingActivity spendingActivity = new SpendingActivity(description, pointsEarned);
-                activityRepository.save(spendingActivity);
-                return spendingActivity;
-            default:
-                throw new FailedToCreateActivityException();
+        if (pointsEarned < 0) {
+            throw new FailedToCreateActivityException();
+        }
+            switch (activityType) {
+                case "Health":
+                    HealthActivity healthActivity = new HealthActivity(description, pointsEarned);
+                    activityRepository.save(healthActivity);
+                    return healthActivity;
+                case "Drive":
+                    DrivingActivity drivingActivity = new DrivingActivity(description, pointsEarned);
+                    activityRepository.save(drivingActivity);
+                    return drivingActivity;
+                case "Spend":
+                    SpendingActivity spendingActivity = new SpendingActivity(description, pointsEarned);
+                    activityRepository.save(spendingActivity);
+                    return spendingActivity;
+                default:
+                    throw new FailedToCreateActivityException();
+            }
+        }
+
+        public Admin findAdminById (Long id){
+            try {
+                return adminRepository.findById(id).get();
+            } catch (RuntimeException e) {
+                throw new FailedToCreateAdminException();
+            }
+        }
+
+        public void changeDefaultGoalPoints ( int points){
+            Member.setDefaultGoalPoints(points);
+        }
+
+        public void changeMaxMilesValue ( int maxMilesValue){
+            GameTile.setMaxMilesValue(maxMilesValue);
         }
     }
-
-     public Admin findAdminById(Long id){
-        try {
-            return adminRepository.findById(id).get();
-        } catch (RuntimeException e){
-            throw new FailedToCreateAdminException();
-        }
-     }
-
-    public void changeDefaultGoalPoints(int points) {
-        Member.setDefaultGoalPoints(points);
-    }
-
-    public void changeMaxMilesValue(int maxMilesValue) {
-        GameTile.setMaxMilesValue(maxMilesValue);
-    }
-}

@@ -22,10 +22,10 @@ public class HealthGoal extends Goal {
     }
 
     public HealthGoal(int totalPointsNeeded) {
-        super("Health", totalPointsNeeded);
+        super( totalPointsNeeded);
     }
 
     public HealthGoal(int totalPointsNeeded, int pointsEarned, boolean goalAccomplished, LocalDate startDate) {
-        super("Health", totalPointsNeeded, pointsEarned, goalAccomplished, startDate);
+        super(totalPointsNeeded, pointsEarned, goalAccomplished, startDate);
     }
 }

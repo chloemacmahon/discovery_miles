@@ -1,10 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.og">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Vitality activities</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet"
+          th:href="@{/css/general_style.css}">
 </head>
 <body>
+<div th:replace="fragments/banner.html :: formField(mainHeading='All rewards')"></div>
+<div class="navigation" th:replace="fragments/navigation :: member-navigation-bar"></div>
+<table>
+    <h2>Available rewards</h2>
+    <tr>
+        <th><h3>Description &nbsp;</h3></th>
+        <th><h3>Reward Partner &nbsp;</h3></th>
+        <th><h3>Mile Cost &nbsp;</h3></th>
+    </tr>
+    <tr th:each="reward : ${allRewards}">
+        <td class="center" th:text="${reward.itemDescription}"></td>
+        <td class="center" th:text="${reward.rewardPartner.companyName}"></td>
+        <td class="center" th:text="${reward.mileCost}"></td>
+    </tr>
+</table>
 
 </body>
 </html>

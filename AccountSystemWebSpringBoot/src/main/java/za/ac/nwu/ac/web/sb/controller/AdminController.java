@@ -14,8 +14,6 @@ import za.ac.nwu.ac.domain.dto.admin.Admin;
 import za.ac.nwu.ac.domain.dto.exchange_rate.ExchangeRate;
 import za.ac.nwu.ac.domain.dto.user.User;
 import za.ac.nwu.ac.logic.AdminService;
-import za.ac.nwu.ac.logic.CurrencyConverterService;
-import za.ac.nwu.ac.repository.ExchangeRateRepository;
 
 import javax.validation.Valid;
 
@@ -25,12 +23,12 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    /*private final CurrencyConverterService currencyConverterService;
+   /* private final CurrencyConverterService currencyConverterService;
 
     private final ExchangeRateRepository exchangeRateRepository;*/
 
     @Autowired
-    public AdminController(AdminService adminService){//, CurrencyConverterService currencyConverterService, ExchangeRateRepository exchangeRateRepository) {
+    public AdminController(AdminService adminService){//}, CurrencyConverterService currencyConverterService, ExchangeRateRepository exchangeRateRepository) {
         this.adminService = adminService;
         /*this.currencyConverterService = currencyConverterService;
         this.exchangeRateRepository = exchangeRateRepository;*/
@@ -158,7 +156,7 @@ public class AdminController {
             return "error/account-error";
         }
         try {
-            /*exchangeRateRepository.save(exchangeRate);*/
+            //exchangeRateRepository.save(exchangeRate);
             return "admin/show-create-activity";
         } catch (RuntimeException e) {
             model.addAttribute("errorMessage", e.getLocalizedMessage());

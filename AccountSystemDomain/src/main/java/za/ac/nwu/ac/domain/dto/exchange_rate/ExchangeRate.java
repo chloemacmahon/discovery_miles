@@ -13,34 +13,47 @@ import javax.validation.constraints.Size;
 @Component
 public class ExchangeRate {
 
+    /**
+     * Represents a exchange rate for a country
+     */
+
     @Id
     @GeneratedValue (strategy = GenerationType.SEQUENCE)
     private Long exchangeRateId;
 
     @Column (length = 3, unique = true)
-    @Size(max = 3)
-    @NotEmpty
     private String countryCode;
 
-    @Column (length = 3, unique = true)
-    @NotEmpty
+    @Column (unique = true)
     private String countryName;
 
-    @NotEmpty
     private char currencySymbol;
 
-    @NotEmpty
     private double toRandExchangeRate;
 
     public ExchangeRate() {
     }
 
-    public ExchangeRate(@Size(max = 3) String countryCode, String countryName, char currencySymbol, double toRandExchangeRate) {
+    /**
+     *
+     * @param countryCode The unique 3 letter country code
+     * @param countryName The country's name
+     * @param currencySymbol The currency symbol for  the country
+     * @param toRandExchangeRate The exchange rate to South African rands
+     */
+
+    public ExchangeRate(String countryCode, String countryName, char currencySymbol, double toRandExchangeRate) {
         this.countryCode = countryCode;
         this.countryName = countryName;
         this.currencySymbol = currencySymbol;
         this.toRandExchangeRate = toRandExchangeRate;
     }
+
+    /**
+     * Calculates the rand value of the amount to exchange
+     * @param amountToExchange The amount of the currency that the user wants to exchange into South African rands
+     * @return Returns the amount of rands that would be received for said amount
+     */
 
     public double calculateRandAmount(double amountToExchange) {
         return (double)Math.round(amountToExchange / getToRandExchangeRate()*100)/100;

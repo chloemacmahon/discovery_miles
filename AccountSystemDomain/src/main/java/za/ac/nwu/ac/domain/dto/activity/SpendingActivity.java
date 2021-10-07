@@ -13,6 +13,10 @@ import javax.persistence.Entity;
 @DiscriminatorValue("Spend")
 public class SpendingActivity extends Activity{
 
+    /**
+     * Completing activities of this type earn points towards the member's weekly spending goal
+     */
+
     public SpendingActivity() {
     }
 

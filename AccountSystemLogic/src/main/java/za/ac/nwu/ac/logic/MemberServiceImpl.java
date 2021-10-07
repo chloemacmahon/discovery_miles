@@ -13,7 +13,7 @@ import java.util.List;
 
 @EntityScan("za.ac.nwu.ac.domain.dto")
 @Component
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
     private MemberRepository memberRepository;
 
@@ -30,24 +30,28 @@ public class MemberServiceImpl implements MemberService{
 
     @Override
     public Member registerMember(String name, String surname, String idNumber, String email, String password) {
-        if (Validator.isValidPassword(password)) {
-            if (Validator.isValidID(idNumber)) {
-                if (Validator.isValidEmail(email)) {
-                    Member member = new Member(name, surname, password, idNumber, email);
-                    memberRepository.save(member);
-                    return member;
-                }else
-                    throw new InvalidEmailException();
-            }else
-                throw new InvalidIdNumberException();
-        }else
+        if (!Validator.isValidPassword(password)) {
             throw new InvalidPasswordException();
+        }
+        if (!Validator.isValidID(idNumber)) {
+            throw new InvalidIdNumberException();
+        }
+        if (!Validator.isValidEmail(email)) {
+            throw new InvalidEmailException();
+        }
+        if (Validator.isValidName(name) && Validator.isValidName(surname)) {
+            Member member = new Member(name, surname, password, idNumber, email);
+            memberRepository.save(member);
+            return member;
+        } else {
+            throw new InvalidNameException("Name contains characters other than letters");
+        }
     }
 
     @Override
     public Member logInMember(String email, String password) {
         Member member = memberRepository.findByEmail(email);
-        if (member == null){
+        if (member == null) {
             throw new FailedToLogInException();
         }
         if (member.getPassword().equals(password))
@@ -58,20 +62,23 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public void updateMemberInDatabase(Member member){
+    public void updateMemberInDatabase(Member member) {
         memberRepository.save(member);
     }
 
     @Override
     public void resetWeeklyGoals(Member member) {
         member.resetGoals();
+        memberRepository.save(member);
     }
 
     @Override
-    public int viewMiles(Member member) {return member.getMiles();}
+    public int viewMiles(Member member) {
+        return member.getMiles();
+    }
 
     @Override
-    public List<Activity> viewActivities(){
+    public List<Activity> viewActivities() {
         return activityRepository.findAll();
     }
 
@@ -79,7 +86,7 @@ public class MemberServiceImpl implements MemberService{
     public Member findMemberById(Long id) {
         try {
             return memberRepository.findById(id).get();
-        } catch (RuntimeException e){
+        } catch (RuntimeException e) {
             throw new FailedToCreateRewardPartnerException();
         }
     }

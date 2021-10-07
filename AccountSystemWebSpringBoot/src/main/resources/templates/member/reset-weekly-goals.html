@@ -11,42 +11,20 @@
 <body>
 <div th:replace="fragments/banner.html :: formField(mainHeading='Hello '+ ${member.name})"></div>
 <div class="navigation" th:replace="fragments/navigation :: member-navigation-bar"></div>
-    <h2 th:inline="text">You have [[${member.miles}]] miles in your account</h2>
-
 <div class="center">
-    <h3>Your weekly goal progress</h3>
+    <form th:action="@{/member/reset-weekly-goals/{id}(id=${member.memberId})}" class="center" method="post">
+    <h3>Your current weekly goals</h3>
     <label for="healthgoalprogress">Health Goal Progress</label><br>
     <progress th:max="${member.healthGoal.pointsNecessary}" id="healthgoalprogress" th:value="${member.healthGoal.pointsEarned}"></progress><br><br>
     <label for="spendinggoalprogress">Spending Goal Progress</label><br>
     <progress th:max="${member.spendingGoal.pointsNecessary}" th:value="${member.spendingGoal.pointsEarned}" id="spendinggoalprogress"></progress><br><br>
     <label for="drivinggoalprogress">Driving Goal Progress</label><br>
     <progress th:max="${member.drivingGoal.pointsNecessary}" th:value="${member.drivingGoal.pointsEarned}" id="drivinggoalprogress"></progress><br><br>
+    <h3>Are you sure you want to reset your weekly goals?</h3><br>
+    <button class="button" type="submit" >Yes, your weekly goals' start date will be set to today's date</button>
+    <a class="button" type="button" th:href="@{/member/member-info/{id}(id=${member.memberId})}">No</a>
+    </form>
 </div>
-<table>
-    <tr>
-        <h3>Your current Game Board </h3>
-    </tr>
-    <tr th:each="gameRow : ${member.gameBoard.translateTo2DimList()}">
-        <td th:each="gameTile : ${gameRow}">
-            <label th:classappend="${gameTile.revealed} ?  shown-game-tile : hidden-game-tile"
-                   th:text="${gameTile.revealed} ?  ${gameTile.milesValue} :' X '"></label>
-        </td>
-    </tr>
-</table>
-<h3 style="size: large" >Your purchased rewards</h3><br>
-<table>
-    <tr>
-        <th><h3 style="size:small">Reward description</h3></th>
-    </tr>
-    <tr th:each="reward : ${member.rewards}">
-        <td th:text="${reward.itemDescription}" class="center"></td>
-    </tr>
-</table>
-<br>
-<div class="center">
-    <a class="button" type="button" th:href="@{/member/add-activity-to-goal/{id}(id=${member.memberId})}">Add activity</a>
-    <a class="button" type="button" th:href="@{/member/purchase-reward/{id}(id=${member.memberId})}">Purchase reward</a>
-    <a class="button" type="button" th:href="@{/member/reset-weekly-goals/{id}(id=${member.memberId})}">Reset current weekly goal</a>
-</div>
+
 </body>
 </html>

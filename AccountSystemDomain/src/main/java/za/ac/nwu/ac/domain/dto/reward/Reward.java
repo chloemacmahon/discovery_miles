@@ -65,4 +65,3 @@ public abstract class Reward implements Comparable<Reward> {
                 '}';
     }
 }
-//item description, millage value, za.ac.nwu.ac.domain.dto.reward partner
