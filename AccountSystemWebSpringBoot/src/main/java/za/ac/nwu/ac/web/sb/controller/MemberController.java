@@ -83,6 +83,17 @@ class MemberController {
         return "error/account-error";
     }
 
+    @RequestMapping(value = "member-info/{id}", method = RequestMethod.GET)
+    public String showMemberInfo(@PathVariable Long id, Model model) {
+        try {
+            model.addAttribute("member", memberService.findMemberById(id));
+            return "member/member-info";
+        } catch (RuntimeException e){
+            model.addAttribute("errorMessage", "No account signed in");
+            return "error/account-error";
+        }
+    }
+
     @RequestMapping(value = "member-info", method = RequestMethod.POST)
     public String postMemberInfo(Model model) {
         if (model.containsAttribute("member")) {
@@ -179,6 +190,41 @@ class MemberController {
             Member member = memberService.findMemberById(id);
             model.addAttribute("member", member);
             subtractMilesService.chooseReward(rewardRepository.findById(rewardId).get(), member);
+            return "member/member-info";
+        } catch (RuntimeException e){
+            model.addAttribute("errorMessage", "Error displaying reward");
+            return "error/account-error";
+        }
+    }
+
+    @RequestMapping(value = "view-all-rewards", method = RequestMethod.GET)
+    public String showAllReward(Model model){
+        try{
+            List<Reward> allRewards = subtractMilesService.showAllReward();
+            model.addAttribute("allRewards", allRewards);
+            return "member/view-all-rewards";
+        } catch (RuntimeException e){
+            model.addAttribute("errorMessage", "Error displaying reward");
+            return "error/account-error";
+        }
+    }
+
+    @RequestMapping(value = "reset-weekly-goals/{id}", method = RequestMethod.GET)
+    public String showResetWeeklyGoals(@PathVariable Long id, Model model){
+        try{
+            Member member = memberService.findMemberById(id);
+            model.addAttribute("member", member);
+            return "member/reset-weekly-goals";
+        } catch (RuntimeException e){
+            model.addAttribute("errorMessage", "Error displaying reward");
+            return "error/account-error";
+        }
+    }
+    @RequestMapping(value = "reset-weekly-goals/{id}", method = RequestMethod.POST)
+    public String resetWeeklyGoals(@PathVariable Long id,Model model){
+        try{
+            memberService.resetWeeklyGoals(memberService.findMemberById(id));
+            model.addAttribute("member",memberService.findMemberById(id));
             return "member/member-info";
         } catch (RuntimeException e){
             model.addAttribute("errorMessage", "Error displaying reward");

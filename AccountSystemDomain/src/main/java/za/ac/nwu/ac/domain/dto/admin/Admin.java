@@ -11,6 +11,10 @@ import javax.persistence.*;
 @Component
 public class Admin {
 
+    /**
+     * Admin account has functionality to add exchange rates and create activities
+      */
+
     @Id
     @GeneratedValue (strategy = GenerationType.SEQUENCE)
     private Long adminId;
@@ -22,6 +26,12 @@ public class Admin {
 
     public Admin() {
     }
+
+    /**
+     * Creates admin account type
+     * @param email The admin's email address
+     * @param password The admin's password
+     */
 
     public Admin(String email, String password) {
         this.email = email;

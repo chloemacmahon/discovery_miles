@@ -17,6 +17,11 @@ public class GameTile {
 
     private static int maxMilesValue = 600;
 
+    /**
+     * To get the max miles value
+     * @return The max miles value
+     */
+
     public static int getMaxMilesValue() {
         return maxMilesValue;
     }

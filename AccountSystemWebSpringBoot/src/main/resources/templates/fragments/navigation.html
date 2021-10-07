@@ -10,17 +10,13 @@
 </head>
 <div class="top-navigation" th:fragment="navigation-bar">
     <a th:href="@{/show-create-account}">Home</a>
-    <!--        <a href="\discovery-miles\AccountSystemWebSpringBoot\src\main\resources\templates\log-in.html">Log In</a>-->
-    <a href="\discovery-miles\AccountSystemWebSpringBoot\src\main\resources\templates\view-goal.html">View weekly goals</a>
-    <a href="#contact">Contact</a>
-    <a href="#about">About</a>
+    <a th:href="@{/}">Log Out</a>
 </div>
 <div class="top-navigation" th:fragment="member-navigation-bar">
     <a th:href="@{/member/member-info}">Home</a>
     <a th:href="@{/member/add-activity-to-goal}">Add activity</a>
-    <a href="\discovery-miles\AccountSystemWebSpringBoot\src\main\resources\templates\view-goal.html">View weekly goals</a>
-    <a href="#contact">Contact</a>
-    <a href="#about">About</a>
+    <a th:href="@{/member/view-all-rewards}">View Rewards</a>
+    <a th:href="@{/}">Log Out</a>
 </div>
 <div class="top-navigation" th:fragment="home-navigation-bar">
     <a th:href="@{/show-create-account}">Create Account</a>

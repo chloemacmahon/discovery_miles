@@ -21,10 +21,10 @@ public class SpendingGoal extends Goal {
     }
 
     public SpendingGoal(int totalPointsNeeded) {
-        super("Spending", totalPointsNeeded);
+        super(totalPointsNeeded);
     }
 
     public SpendingGoal(int totalPointsNeeded, int pointsEarned, boolean goalAccomplished, LocalDate startDate) {
-        super("Spending", totalPointsNeeded, pointsEarned, goalAccomplished, startDate);
+        super(totalPointsNeeded, pointsEarned, goalAccomplished, startDate);
     }
 }

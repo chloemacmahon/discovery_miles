@@ -45,12 +45,10 @@ public class RewardPartner {
         if (ReceiveInputs.getIntInput("Enter 1 for subscription za.ac.nwu.ac.domain.dto.reward") == 1) {
             SubscriptionReward subscriptionReward = new SubscriptionReward(ReceiveInputs.getStringInput("Enter the item description"),
                     ReceiveInputs.getIntInput("Enter the mile cost"), this, ReceiveInputs.getIntInput("How many months subscription is this reward for"));
-            //db.insertReward((Reward)subscriptionReward);
             return subscriptionReward;
         } else {
             VoucherReward voucherReward = new VoucherReward(ReceiveInputs.getStringInput("Enter the item description"),
                     ReceiveInputs.getIntInput("Enter the mile cost"), this, ReceiveInputs.getIntInput("What is the monetary value of this reward?"));
-            //db.insertReward((Reward)voucherReward);
             return voucherReward;
         }
     }

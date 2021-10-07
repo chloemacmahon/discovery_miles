@@ -24,8 +24,6 @@ public class GameBoard {
     @OneToMany (cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     private List<GameTile> gameBoard;
 
-    //List<List<GameTile>>
-
     private int amountOfRows;
 
     private int amountOfColumns;
@@ -116,10 +114,13 @@ public class GameBoard {
             return -1;
         }
     }
+/*
 
-    /**
+    */
+/**
      * Displays game board, x is displayed if the tile has not been revealed yet otherwise the mile value is displayed
-     */
+     *//*
+
 
     public void showGameBoard() {
         List<String> boardToPrint = new ArrayList<>();
@@ -141,6 +142,7 @@ public class GameBoard {
             System.out.println(row);
         }
     }
+*/
 
     public List<List<GameTile>> translateTo2DimList(){
         List<List<GameTile>> boardToReturn = new ArrayList<>();

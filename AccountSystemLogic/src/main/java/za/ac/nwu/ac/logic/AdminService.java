@@ -11,10 +11,6 @@ public interface AdminService {
 
     Admin logInAdmin(String email, String password);
 
-    Member registerMember(String name, String surname, String idNumber, String email, String password);
-
-    RewardPartner registerRewardPartner(String companyName, String email, String adminPassword);
-
     Activity addNewActivity(String activityType, String activityName, int pointsEarned);
 
     Admin findAdminById(Long id);

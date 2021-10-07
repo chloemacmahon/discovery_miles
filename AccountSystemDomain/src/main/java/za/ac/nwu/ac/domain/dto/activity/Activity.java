@@ -26,9 +26,16 @@ public abstract class Activity {
     @NotNull
     private int pointsEarned;
 
+    /**
+     * A member completes an activity to earn points towards their weekly goals
+     */
     public Activity() {
     }
-
+    /**
+     * A member completes an activity to earn points towards their weekly goals
+     * @param description the activity's description
+     * @param pointsEarned the points that the member earned by completing the activity
+     */
     public Activity(String description, int pointsEarned) {
         this.description = description;
         this.pointsEarned = pointsEarned;

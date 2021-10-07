@@ -11,6 +11,20 @@ import org.springframework.stereotype.Component;
 public class Validator {
 
     /**
+     * Validates that a name / surname only contains letters
+     * @param name The name that needs to be verified
+     * @return True if the name only contains letters
+     */
+
+    public static Boolean isValidName(String name){
+        for (Character letter: name.toCharArray()) {
+            if (!Character.isLetter(letter))
+                return false;
+        }
+        return true;
+    }
+
+    /**
      * Validates the za.ac.nwu.ac.domain.dto.member's ID number
      *
      * @param idNumber the za.ac.nwu.ac.domain.dto.member's ID number
@@ -30,27 +44,6 @@ public class Validator {
 
         return ((Character.getNumericValue(idNumberArray[4]) * 10) + Character.getNumericValue(idNumberArray[5])) <= 31;
     }
-
-//    /**
-//     * Verifies the za.ac.nwu.ac.domain.dto.member's ID number with the luhn algorithm
-//     *
-//     * @param idNumber the za.ac.nwu.ac.domain.dto.member's ID number
-//     * @return true if the za.ac.nwu.ac.domain.dto.member's ID number is correct according to the luhn algorithm
-//     */
-
-//    private static boolean luhnVerification(String idNumber) {
-//        int addedValue = 0;
-//        for (int i = 0; i < idNumber.length() - 1; i++) {
-//            if (i % 2 == 0) {
-//                addedValue += idNumber.charAt(i);
-//            } else {
-//                int doubledValue = idNumber.charAt(i) * 2;
-//                addedValue += doubledValue % 10 + Math.floorMod(doubledValue, 10);
-//            }
-//        }
-//        System.out.println("" + addedValue / 10);
-//        return addedValue / 10 == 0;
-//    }
 
     /**
      * Validates that a user's password is:

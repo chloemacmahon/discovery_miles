@@ -57,14 +57,17 @@ public class Member {
     private String email;
     @Column
     private int miles;
+
     @OneToOne(cascade = {CascadeType.ALL})
     private GameBoard gameBoard;
+
     @OneToOne(cascade = {CascadeType.ALL})
     private HealthGoal healthGoal;
     @OneToOne(cascade = {CascadeType.ALL})
     private DrivingGoal drivingGoal;
     @OneToOne(cascade = {CascadeType.ALL})
     private SpendingGoal spendingGoal;
+
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.EAGER)
     @Fetch(value = FetchMode.SUBSELECT)
     private List<Reward> rewards;

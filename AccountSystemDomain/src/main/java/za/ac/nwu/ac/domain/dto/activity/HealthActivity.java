@@ -12,6 +12,10 @@ import javax.persistence.Entity;
 @DiscriminatorValue("Health")
 public class HealthActivity extends Activity{
 
+    /**
+     * Completing activities of this type earn points towards the member's weekly health goal
+     */
+
     public HealthActivity() {
     }
 
